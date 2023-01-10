@@ -103,6 +103,8 @@ public class RESTRequestParameterProcessingFilter extends AbstractAuthentication
             authRequest = new UsernameSaltedTokenAuthenticationToken(username, salt, token);
         } else if (password != null) {
             authRequest = new UsernamePasswordAuthenticationToken(username, password);
+        } else {
+            throw new AuthenticationServiceException("", new APIException(ErrorCode.MISSING_PARAMETER));
         }
 
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
