@@ -58,6 +58,7 @@ import java.awt.*;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -120,7 +121,7 @@ public class StreamController {
 
         // If "playlist" request parameter is set, this is a Podcast request. In that case, create a separate
         // play queue (in order to support multiple parallel Podcast streams).
-        boolean isPodcast = playlist != null;
+        boolean isPodcast = Objects.nonNull(playlist);
         if (isPodcast) {
             PlayQueue playQueue = playQueueFactory.createPlayQueue();
             playQueue.addFiles(false, playlistService.getFilesInPlaylist(playlist));
@@ -140,7 +141,7 @@ public class StreamController {
         // Also, enable partial download (HTTP byte range).
         MediaFile file = path.map(mediaFileService::getMediaFile)
                 .orElseGet(() -> id.map(mediaFileService::getMediaFile).orElse(null));
-        boolean isSingleFile = file != null;
+        boolean isSingleFile = Objects.nonNull(file);
 
         Long byteOffset = null;
 
