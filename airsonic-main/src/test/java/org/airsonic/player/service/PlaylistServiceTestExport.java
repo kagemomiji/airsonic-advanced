@@ -4,11 +4,10 @@ import com.google.common.collect.Lists;
 import org.airsonic.player.dao.MediaFileDao;
 import org.airsonic.player.dao.PlaylistDao;
 import org.airsonic.player.domain.MediaFile;
+import org.airsonic.player.domain.MusicFolder;
 import org.airsonic.player.domain.Playlist;
 import org.airsonic.player.service.playlist.DefaultPlaylistExportHandler;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,10 +19,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -45,10 +47,16 @@ public class PlaylistServiceTestExport {
     MediaFileService mediaFileService;
 
     @Mock
+    MediaFolderService mediaFolderService;
+
+    @Mock
     SettingsService settingsService;
 
     @Mock
     SecurityService securityService;
+
+    @Mock
+    MusicFolder mockedFolder;
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -75,11 +83,14 @@ public class PlaylistServiceTestExport {
 
         when(mediaFileDao.getFilesInPlaylist(eq(23))).thenReturn(getPlaylistFiles());
         when(settingsService.getPlaylistExportFormat()).thenReturn("m3u");
+        when(mediaFolderService.getMusicFolderById(any())).thenReturn(mockedFolder);
+        when(mockedFolder.getPath()).thenReturn(Paths.get("/"));
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         playlistService.exportPlaylist(23, outputStream);
-        String actual = outputStream.toString();
-        Assert.assertEquals(IOUtils.toString(getClass().getResourceAsStream("/PLAYLISTS/23.m3u")), actual);
+        byte[] actual = outputStream.toByteArray();
+        byte[] expected = getClass().getResourceAsStream("/PLAYLISTS/23.m3u").readAllBytes();
+        assertArrayEquals(expected, actual);
     }
 
     private List<MediaFile> getPlaylistFiles() {
