@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -73,7 +74,7 @@ public class AddUnknownMediaFolders implements CustomSqlChange {
             }
         }
         List<String> unknownMusicFoldersList = new ArrayList<>(unknownMusicFolders);
-        int folderId = maxFolderId + 1;
+        int folderId = Objects.isNull(maxFolderId) ? 1 : maxFolderId + 1;
 
         return IntStream.range(0, unknownMusicFoldersList.size())
                 .mapToObj(i -> i)
