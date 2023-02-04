@@ -1,0 +1,29 @@
+name: Repository Maintenance
+description: Respository maintenance task
+title: "[Chore]: "
+labels: ["chore"]
+body:
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: What should be improved?
+      multiple: false
+      options:
+        - "CI"
+        - "Issue template"
+        - "PR template"
+        - "Other"
+    validations:
+      required: true
+  
+  - type: textarea
+    id: request
+    attributes:
+      label: request
+      description: Tell us how to improve it. 
+      placeholder: |
+        Add CI action for xxx
+        Remove input form xxxx from bug_report
+    validations:
+      required: true
