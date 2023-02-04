@@ -7,6 +7,12 @@ Airsonic-Advanced
 ![](https://github.com/kagemomiji/airsonic-advanced/workflows/Edge%20Deploy%20CI%20(Maven)/badge.svg)
 ![](https://github.com/kagemomiji/airsonic-advanced/workflows/Stable%20Deploy%20CI%20(Maven)/badge.svg)
 
+What is kagemoiji/airsonic-advanced?
+------------------------------------
+The main objective of this repository is to keep airsonic-advanced safe for use.
+I don't have much time to add features right now as I am adding tests to prevent deggregation and upgrade dependent libraries.
+Therefore, PRs for additional features are welcome!
+
 What is Airsonic-Advanced?
 --------------------------
 Airsonic-Advanced is a more modern implementation of the Airsonic fork with several key performance and feature enhancements. It adds and supersedes several features in Airsonic.
@@ -238,12 +244,6 @@ and are licensed under [MIT license](https://github.com/feathericons/feather/blo
 
 Community
 ---------
-Bugs/feature requests/discussions pertaining to Airsonic-Advanced may be raised as issues within GitHub on the Airsonic-Advanced project page.
+Bugs/feature requests/discussions pertaining to kagemomiji/airsonic-advanced may be raised as issues within GitHub on the Airsonic-Advanced project page.
 
-Vanilla Airsonic itself has several places outside of GitHub for community discussion, questions, etc:
-
-- [#airsonic:matrix.org on Matrix](https://matrix.to/#/#airsonic:matrix.org)
-- [#airsonic on IRC](http://webchat.freenode.net?channels=%23airsonic)
-- [airsonic subreddit](https://www.reddit.com/r/airsonic)
-
-*Note that the Matrix room and IRC channel are bridged together.*
+GitHub Discussions is prepared for community discussion, questions, etc:
