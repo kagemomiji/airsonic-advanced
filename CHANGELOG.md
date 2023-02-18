@@ -1,50 +1,7 @@
 <!--
 # CHANGELOG.md
-# kagemomiji/airsonic-advanced
+# airsonic/airsonic
 # -->
-
-## v11.0.2 - 16 Jan 2023
-
-** Treat code warning and deprecated functions**
-
-Chores:
-- Treat deprecated jdbcTemplate methods
-- Treat deprecated Assertion methods
-- Treat deprecated ObjectMapper methods
-- Remove deprecated LastModified annotation
-- Change GUI link to this repository
-- And some code warning fixed
-
-
-## v11.0.1 - 30 Dec 2022
-
-**Security update and modify CI for this repository**
-
-Changes:
-- Docker base image to eclipse-temurin:17.0.5
-- Change base Java version to 17
-- Change support DB version
-  - HSQLDB: 2.7.1
-  - PostgreSQL: 13.3, 14.1
-  - MySQL: 8.0
-  - MariaDB: 10.5
-
-Security:
-- Upgrade springboot to 2.6.14 for CVE
-- Upgrade hsqldb to 2.7.1 for CVE
-- Replace jdom to jdom2 for CVE
-- Upgrade snakeyml to 1.33 for CVE
-- Upgrade liquibase-core to 4.18.0 for CVE
-- Upgrade apache-commons-text to 1.10.0 for CVE
-- Upgrade org.apache.cxf:cxf-core to 3.5.5 for CVE
-
-Chores:
-- Modify CI for this repository
-- Add dependabot for github-actions auto update
-- Add Trivy scan to CI
-- Update gpg key
-- Modify pom.xml for this repository
-- Replace badges on README.md 
 
 ## v10.5.0 - 7 Nov 2019
 

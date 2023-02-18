@@ -1,17 +1,13 @@
 <!--
 # README.md
-# kagemomiji/airsonic-advanced
+# airsonic-advanced/airsonic-advanced
 -->
 Airsonic-Advanced
 =================
-![](https://github.com/kagemomiji/airsonic-advanced/workflows/Edge%20Deploy%20CI%20(Maven)/badge.svg)
-![](https://github.com/kagemomiji/airsonic-advanced/workflows/Stable%20Deploy%20CI%20(Maven)/badge.svg)
-
-What is kagemoiji/airsonic-advanced?
-------------------------------------
-The main objective of this repository is to keep airsonic-advanced safe for use.
-I don't have much time to add features right now as I am adding tests to prevent deggregation and upgrade dependent libraries.
-Therefore, PRs for additional features are welcome!
+![](https://github.com/airsonic-advanced/airsonic-advanced/workflows/Edge%20Deploy%20CI%20(Maven)/badge.svg)
+![](https://github.com/airsonic-advanced/airsonic-advanced/workflows/Stable%20Deploy%20CI%20(Maven)/badge.svg)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/airsonic-advanced/airsonic-advanced.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/airsonic-advanced/airsonic-advanced/context:javascript)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/airsonic-advanced/airsonic-advanced.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/airsonic-advanced/airsonic-advanced/context:java)
 
 What is Airsonic-Advanced?
 --------------------------
@@ -84,8 +80,8 @@ The following is an incomplete list of features that are enhanced from Airsonic:
   - Ability to pass properties via environment or system variables. You can but do not need to modify `airsonic.properties` to change preferences
   - Ability to use custom URLs to scrobble on ListenBrainz servers
   - Ability to use Repeat-One in play queues in web-clients
-  - Sonos support: [read documentation](https://github.com/kagemomiji/airsonic-advanced/blob/master/SONOS.md)
-  - Chromecast support: [read details](https://github.com/kagemomiji/airsonic-advanced/blob/master/CHROMECAST.md)
+  - Sonos support: [read documentation](https://github.com/airsonic-advanced/airsonic-advanced/blob/master/SONOS.md)
+  - Chromecast support: [read details](https://github.com/airsonic-advanced/airsonic-advanced/blob/master/CHROMECAST.md)
   - Ability to upload to specified folders (via `UploadsFolder` property/parameter)
   - Ability to upload multiple files simultaneously
   - Ability to upload and extract more archive formats:
@@ -108,12 +104,12 @@ The following is an incomplete list of features that are enhanced from Airsonic:
     - MariaDB
   - Uses failsafe for integration testing instead of cucumber
 - Build and deployment
-  - An updated Docker image with JRE 17 base layer.
+  - An updated Docker image with JRE 14 base layer.
     - Add support for XMP to support playing MOD files out of the box
   - Multiplatform builds, including for ARM v7 and ARM64
   - A more advanced build pipeline including automatic releases and deploys at merge
     - Allows people to grab the newest build without compiling from source as soon as features/enhancements are merged, instead of waiting for the next stable build (which may be months away)
-  - Available on GHCR 
+  - Available on GHCR as well as Docker Hub
 - Stepbacks
   - The Java Jukebox has been removed, due to the third-party library not being kept up to date with modern JVMs. See [PR #636](https://github.com/airsonic-advanced/airsonic-advanced/pull/636).
 
@@ -131,19 +127,20 @@ Airsonic-Advanced snapshots are generally pretty stable and recommended for use 
 
 ### Stand-alone binaries
 Airsonic-Advanced can be downloaded from
-[GitHub](https://github.com/kagemomiji/airsonic-advanced/releases).
+[GitHub](https://github.com/airsonic-advanced/airsonic-advanced/releases).
 
-The release signature may be verified using the [public key](https://github.com/kagemomiji/airsonic-advanced/blob/master/releases_public_key.asc).
+The release signature may be verified using the [public key](https://github.com/airsonic-advanced/airsonic-advanced/blob/master/releases_public_key.asc).
 
 You need a _minimum_ Java Runtime Environment (JRE) of 1.8 for 10.6.x series, and 11 for 11.x onwards (including snapshots).
-- For 11.x releases and onwards -> Java 17
+- For 10.6.x releases -> Java 8
+- For 11.x releases and onwards -> Java 11
 
 Airsonic-Advanced is run similarly to (and in lieu of) vanilla Airsonic.
 
 Read the [compatibility notes](#compatibility-notes).
 
 ### Docker
-[GHCR](https://ghcr.io/kagemomiji/airsonic-advanced). Docker releases are recently multiplatform, which means ARMv7 and ARM64 are also released to Dockerhub. However, automated testing for those archs is not currently done in the CI/CD pipeline (only Linux platform is tested).
+Docker releases are at [DockerHub](https://hub.docker.com/r/airsonicadvanced/airsonic-advanced) and [GHCR](https://ghcr.io/airsonic-advanced/airsonic-advanced). Docker releases are recently multiplatform, which means ARMv7 and ARM64 are also released to Dockerhub. However, automated testing for those archs is not currently done in the CI/CD pipeline (only Linux platform is tested).
 
 Please note that for Docker images, the volume mounting points have changed and are different from Airsonic. Airsonic mount points are at `/airsonic/*` inside the container. Airsonic-Advanced tries to use the same volume locations as the default war image at `/var/*` in order to remain consistent if people want to switch between the containers and non-containers.
   - `Music:/airsonic/music` -> `Music:/var/music`
@@ -203,10 +200,6 @@ Other properties are obsolete and have been removed:
 
 First migration to 11.x will create a backup DB next to the DB folder. It will be marked as `db.backup.<timestamp>`. Use this folder as the DB if a revert to an older major version is needed (11.0 -> 10.6.0).
 
-> **Warning**  
-If you use HSQLDB for 10.6.0, DB migration must fails.
-First upgrade to 11.0.0-SNAPSHOT.20221224143241 then upgrade to latest release.
-
 History
 -----
 
@@ -225,8 +218,6 @@ based on the Subsonic codebase that is free, open source, and community driven.
 
 Around November 2019, Airsonic-Advanced was forked off the base Airsonic fork due to differences in pace and review of development. Several key features of the framework were outdated, and attempts to upgrade them occasionally took upto a year. Airsonic-Advanced tries a modern implementation and bleeding edge approach to development, and is thus usually ahead of the base fork in dependencies and features.
 
-December 2022, this repository forked from Airsonic-Advanced.
-
 Pull Requests are always welcome. All Pull Requests are reviewed before being merged to ensure we continue to meet our goals.
 
 License
@@ -244,6 +235,12 @@ and are licensed under [MIT license](https://github.com/feathericons/feather/blo
 
 Community
 ---------
-Bugs/feature requests/discussions pertaining to kagemomiji/airsonic-advanced may be raised as issues within GitHub on the Airsonic-Advanced project page.
+Bugs/feature requests/discussions pertaining to Airsonic-Advanced may be raised as issues within GitHub on the Airsonic-Advanced project page.
 
-GitHub Discussions is prepared for community discussion, questions, etc:
+Vanilla Airsonic itself has several places outside of GitHub for community discussion, questions, etc:
+
+- [#airsonic:matrix.org on Matrix](https://matrix.to/#/#airsonic:matrix.org)
+- [#airsonic on IRC](http://webchat.freenode.net?channels=%23airsonic)
+- [airsonic subreddit](https://www.reddit.com/r/airsonic)
+
+*Note that the Matrix room and IRC channel are bridged together.*

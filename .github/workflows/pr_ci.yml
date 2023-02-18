@@ -2,7 +2,7 @@ name: 'PR CI (Maven)'
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
     paths-ignore:
       - "**.md"
       - "*.txt"
@@ -42,6 +42,15 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
+          - jdk: 11
+            services: {}
+            env: {}
+          - jdk: 14
+            services: {}
+            env: {}
+          - jdk: 16
+            services: {}
+            env: {}
           - jdk: 17
             services: {}
             env: {}
