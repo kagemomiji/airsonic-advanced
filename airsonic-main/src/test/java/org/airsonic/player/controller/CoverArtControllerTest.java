@@ -14,8 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
 
- Copyright 2023 (C) Y.Tory
- */
+  */
 package org.airsonic.player.controller;
 
 import org.airsonic.player.dao.AlbumDao;

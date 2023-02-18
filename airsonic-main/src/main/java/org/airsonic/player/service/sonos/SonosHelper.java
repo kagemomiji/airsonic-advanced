@@ -14,8 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
  *
- *  Copyright 2023 (C) Y.Tory
- *  Copyright 2015 (C) Sindre Mehus
+ *   *  Copyright 2015 (C) Sindre Mehus
  */
 
 package org.airsonic.player.service.sonos;
