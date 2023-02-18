@@ -2,7 +2,7 @@ name: 'Edge Deploy CI (Maven)'
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths-ignore:
       - "**.md"
       - "*.txt"
@@ -16,7 +16,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "startsWith(github.event.head_commit.message, 'Merge pull request ')"
+    if: "github.repository == 'airsonic-advanced/airsonic-advanced' && startsWith(github.event.head_commit.message, 'Merge pull request ')"
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK
@@ -68,6 +68,11 @@ jobs:
           files: |
             airsonic-main/target/airsonic.war
             airsonic-main/target/artifacts-checksums.sha
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -82,8 +87,13 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ghcr.io/kagemomiji/airsonic-advanced:latest
-            ghcr.io/kagemomiji/airsonic-advanced:edge-latest
-            ghcr.io/kagemomiji/airsonic-advanced:edge-${{ steps.tagcalc.outputs.tag }}
-            ghcr.io/kagemomiji/airsonic-advanced:gitcommit-${{ github.sha }}
-            ghcr.io/kagemomiji/airsonic-advanced:gitrun-${{ github.run_id }}
+            airsonicadvanced/airsonic-advanced:latest
+            airsonicadvanced/airsonic-advanced:edge-latest
+            airsonicadvanced/airsonic-advanced:edge-${{ steps.tagcalc.outputs.tag }}
+            airsonicadvanced/airsonic-advanced:gitcommit-${{ github.sha }}
+            airsonicadvanced/airsonic-advanced:gitrun-${{ github.run_id }} 
+            ghcr.io/airsonic-advanced/airsonic-advanced:latest
+            ghcr.io/airsonic-advanced/airsonic-advanced:edge-latest
+            ghcr.io/airsonic-advanced/airsonic-advanced:edge-${{ steps.tagcalc.outputs.tag }}
+            ghcr.io/airsonic-advanced/airsonic-advanced:gitcommit-${{ github.sha }}
+            ghcr.io/airsonic-advanced/airsonic-advanced:gitrun-${{ github.run_id }}

@@ -16,7 +16,7 @@ RUN mv WEB-INF/classes/liquibase cliquibase
 FROM eclipse-temurin:17.0.5_8-jre-jammy
 
 LABEL description="Airsonic-Advanced is a free, web-based media streamer, providing ubiquitous access to your music." \
-      url="https://github.com/kagemomiji/airsonic-advanced"
+      url="https://github.com/airsonic-advanced/airsonic-advanced"
 
 ENV AIRSONIC_PORT=4040 AIRSONIC_DIR=/var CONTEXT_PATH=/ UPNP_PORT=4041 PUID=0 PGID=0
 

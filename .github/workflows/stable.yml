@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: "startsWith(github.ref, 'refs/heads/stable/')"
+    if: "github.repository == 'airsonic-advanced/airsonic-advanced' && startsWith(github.ref, 'refs/heads/stable/')"
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
@@ -64,10 +64,15 @@ jobs:
           prerelease: false
           generate_release_notes: true
           body: |
-            List of issues addressed: https://github.com/kagemomiji/airsonic-advanced/issues?q=milestone%3A${{ steps.tagcalc.outputs.tag }}
+            List of issues addressed: https://github.com/airsonic-advanced/airsonic-advanced/issues?q=milestone%3A${{ steps.tagcalc.outputs.tag }}
           files: |
             airsonic-main/target/airsonic.war
             airsonic-main/target/artifacts-checksums.sha.asc
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -84,9 +89,15 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ghcr.io/kagemomiji/airsonic-advanced:stable
-            ghcr.io/kagemomiji/airsonic-advanced:stable-latest
-            ghcr.io/kagemomiji/airsonic-advanced:stable-${{ steps.tagcalc.outputs.tag }}
-            ghcr.io/kagemomiji/airsonic-advanced:${{ steps.tagcalc.outputs.tag }}
-            ghcr.io/kagemomiji/airsonic-advanced:gitcommit-${{ github.sha }}
-            ghcr.io/kagemomiji/airsonic-advanced:gitrun-${{ github.run_id }}
+            airsonicadvanced/airsonic-advanced:stable
+            airsonicadvanced/airsonic-advanced:stable-latest
+            airsonicadvanced/airsonic-advanced:stable-${{ steps.tagcalc.outputs.tag }}
+            airsonicadvanced/airsonic-advanced:${{ steps.tagcalc.outputs.tag }}
+            airsonicadvanced/airsonic-advanced:gitcommit-${{ github.sha }}
+            airsonicadvanced/airsonic-advanced:gitrun-${{ github.run_id }}
+            ghcr.io/airsonic-advanced/airsonic-advanced:stable
+            ghcr.io/airsonic-advanced/airsonic-advanced:stable-latest
+            ghcr.io/airsonic-advanced/airsonic-advanced:stable-${{ steps.tagcalc.outputs.tag }}
+            ghcr.io/airsonic-advanced/airsonic-advanced:${{ steps.tagcalc.outputs.tag }}
+            ghcr.io/airsonic-advanced/airsonic-advanced:gitcommit-${{ github.sha }}
+            ghcr.io/airsonic-advanced/airsonic-advanced:gitrun-${{ github.run_id }}
