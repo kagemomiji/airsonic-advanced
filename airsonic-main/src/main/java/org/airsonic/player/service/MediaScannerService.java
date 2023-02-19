@@ -187,16 +187,18 @@ public class MediaScannerService {
         setScanning(true);
 
         ForkJoinPool pool = new ForkJoinPool(scannerParallelism, mediaScannerThreadFactory, null, true);
+        MediaLibraryStatistics statistics = new MediaLibraryStatistics();
+        indexManager.startIndexing();
 
-        CompletableFuture.runAsync(() -> doScanLibrary(pool), pool)
+        CompletableFuture.runAsync(() -> doScanLibrary(pool, statistics), pool)
+                .whenComplete((r,e) -> indexManager.stopIndexing(statistics))
                 .thenRunAsync(() -> playlistService.importPlaylists(), pool)
                 .whenComplete((r,e) -> pool.shutdown())
                 .whenComplete((r,e) -> setScanning(false));
     }
 
-    private void doScanLibrary(ForkJoinPool pool) {
+    private void doScanLibrary(ForkJoinPool pool, MediaLibraryStatistics statistics) {
         LOG.info("Starting to scan media library.");
-        MediaLibraryStatistics statistics = new MediaLibraryStatistics();
         LOG.debug("New last scan date is {}", statistics.getScanDate());
 
         try {
@@ -211,7 +213,6 @@ public class MediaScannerService {
             scanCount.set(0);
 
             mediaFileService.setMemoryCacheEnabled(false);
-            indexManager.startIndexing();
 
             // Recurse through all files on disk.
             mediaFolderService.getAllMusicFolders()
@@ -285,7 +286,6 @@ public class MediaScannerService {
             LOG.error("Failed to scan media library.", x);
         } finally {
             mediaFileService.setMemoryCacheEnabled(true);
-            indexManager.stopIndexing(statistics);
             LOG.info("Media library scan took {}s", ChronoUnit.SECONDS.between(statistics.getScanDate(), Instant.now()));
         }
     }
