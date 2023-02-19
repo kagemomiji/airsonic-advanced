@@ -146,8 +146,7 @@ public class MediaFileService {
     }
 
     @Cacheable(cacheNames = "mediaFileIdCache", condition = "#root.target.memoryCacheEnabled", unless = "#result == null")
-    public MediaFile getMediaFile(Integer id) {
-        if (Objects.isNull(id)) return null;
+    public MediaFile getMediaFile(int id) {
         MediaFile mediaFile = mediaFileDao.getMediaFile(id);
         if (mediaFile == null) {
             return null;

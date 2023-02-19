@@ -56,7 +56,7 @@ public class MetricsManager {
      * Creates a {@link Timer} whose name is based on a class name and a
      * qualified name.
      */
-    public Timer timer(Class<?> clazz, String name) {
+    public Timer timer(Class clazz, String name) {
         if (metricsActivatedByConfiguration()) {
             return new TimerBuilder().timer(clazz, name);
         } else {
@@ -93,7 +93,7 @@ public class MetricsManager {
      */
     public static class TimerBuilder {
 
-        public Timer timer(Class<?> clazz, String name) {
+        public Timer timer(Class clazz, String name) {
             com.codahale.metrics.Timer t = metrics.timer(MetricRegistry.name(clazz,name));
             com.codahale.metrics.Timer.Context tContext = t.time();
             return new Timer(tContext);
@@ -146,7 +146,7 @@ public class MetricsManager {
 
     private static class NullTimerBuilder extends TimerBuilder {
         @Override
-        public Timer timer(Class<?> clazz, String name) {
+        public Timer timer(Class clazz, String name) {
             return nullTimerSingleton;
         }
     }

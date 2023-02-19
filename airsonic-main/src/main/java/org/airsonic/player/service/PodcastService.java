@@ -256,8 +256,7 @@ public class PodcastService {
     /**
      * Returns a single Podcast channel.
      */
-    public PodcastChannel getChannel(Integer channelId) {
-        if (Objects.isNull(channelId)) return null;
+    public PodcastChannel getChannel(int channelId) {
         return podcastDao.getChannel(channelId);
     }
 
@@ -297,8 +296,7 @@ public class PodcastService {
      * @return Possibly empty list of all Podcast episodes for the given channel, sorted in
      *         reverse chronological order (newest episode first).
      */
-    public List<PodcastEpisode> getEpisodes(Integer channelId) {
-        if (Objects.isNull(channelId)) return new ArrayList<PodcastEpisode>();
+    public List<PodcastEpisode> getEpisodes(int channelId) {
         return podcastDao.getEpisodes(channelId).stream().filter(filterAllowed).collect(toList());
     }
 

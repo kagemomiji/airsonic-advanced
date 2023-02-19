@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
 
-  Copyright 2016 (C) Airsonic Authors
+ Copyright 2016 (C) Airsonic Authors
  Based upon Subsonic, Copyright 2009 (C) Sindre Mehus
  */
 package org.airsonic.player.service;
@@ -57,6 +57,8 @@ public class StatusService {
 
     @Autowired
     private MediaFileService mediaFileService;
+    @Autowired
+    private MediaFolderService mediaFolderService;
     @Autowired
     private SettingsService settingsService;
     @Autowired

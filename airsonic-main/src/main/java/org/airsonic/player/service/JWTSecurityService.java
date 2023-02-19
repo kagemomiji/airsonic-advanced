@@ -1,22 +1,3 @@
-/*
- This file is part of Airsonic.
-
- Airsonic is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- Airsonic is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
-
-  Copyright 2016 (C) Airsonic Authors
- Based upon Subsonic, Copyright 2009 (C) Sindre Mehus
- */
 package org.airsonic.player.service;
 
 import com.auth0.jwt.JWT;
@@ -26,6 +7,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.airsonic.player.security.JWTAuthenticationToken;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
@@ -43,6 +26,7 @@ import java.util.Optional;
 
 @Service("jwtSecurityService")
 public class JWTSecurityService {
+    private static final Logger LOG = LoggerFactory.getLogger(JWTSecurityService.class);
 
     public static final String JWT_PARAM_NAME = "jwt";
     public static final String CLAIM_PATH = "path";

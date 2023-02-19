@@ -14,7 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
 
-  Copyright 2016 (C) Airsonic Authors
+ Copyright 2016 (C) Airsonic Authors
  Based upon Subsonic, Copyright 2009 (C) Sindre Mehus
  */
 package org.airsonic.player.service;
@@ -40,8 +40,6 @@ public class JukeboxService {
             case JUKEBOX:
                 jukeboxLegacySubsonicService.setGain(gain);
                 break;
-            default:
-                break;
         }
     }
 
@@ -49,8 +47,6 @@ public class JukeboxService {
         switch (airsonicPlayer.getTechnology()) {
             case JUKEBOX:
                 throw new UnsupportedOperationException();
-            default:
-                break;
         }
     }
 
@@ -58,8 +54,6 @@ public class JukeboxService {
         switch (airsonicPlayer.getTechnology()) {
             case JUKEBOX:
                 return jukeboxLegacySubsonicService.getGain();
-            default:
-                break;
         }
         return 0;
     }
@@ -78,8 +72,6 @@ public class JukeboxService {
         switch (airsonicPlayer.getTechnology()) {
             case JUKEBOX:
                 return jukeboxLegacySubsonicService.getPosition();
-            default:
-                break;
         }
         return 0;
     }
@@ -92,8 +84,6 @@ public class JukeboxService {
             case JUKEBOX:
                 jukeboxLegacySubsonicService.updateJukebox(airsonicPlayer,0);
                 break;
-            default:
-                break;
         }
     }
 
@@ -101,8 +91,6 @@ public class JukeboxService {
         switch (airsonicPlayer.getTechnology()) {
             case JUKEBOX:
                 jukeboxLegacySubsonicService.updateJukebox(airsonicPlayer,0);
-                break;
-            default:
                 break;
         }
     }
@@ -112,8 +100,6 @@ public class JukeboxService {
             case JUKEBOX:
                 jukeboxLegacySubsonicService.updateJukebox(airsonicPlayer,0);
                 break;
-            default:
-                break;
         }
     }
 
@@ -121,8 +107,6 @@ public class JukeboxService {
         switch (airsonicPlayer.getTechnology()) {
             case JUKEBOX:
                 jukeboxLegacySubsonicService.updateJukebox(airsonicPlayer,offset);
-                break;
-            default:
                 break;
         }
     }
@@ -140,8 +124,6 @@ public class JukeboxService {
                 } else {
                     return jukeboxLegacySubsonicService.getPlayer().getId().equals(airsonicPlayer.getId());
                 }
-            default:
-                break;
         }
         return false;
     }

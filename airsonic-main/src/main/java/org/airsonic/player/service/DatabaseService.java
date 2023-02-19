@@ -11,7 +11,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.diff.output.DiffOutputControl;
 import liquibase.diff.output.StandardObjectChangeFilter;
 import liquibase.integration.commandline.CommandLineUtils;
-import liquibase.resource.DirectoryResourceAccessor;
+import liquibase.resource.FileSystemResourceAccessor;
 import org.airsonic.player.dao.DatabaseDao;
 import org.airsonic.player.util.FileUtil;
 import org.airsonic.player.util.LambdaUtils;
@@ -212,7 +212,7 @@ public class DatabaseService {
         truncateAll(database, connection);
         try (Stream<Path> files = Files.list(p)) {
             files.sorted().forEach(LambdaUtils.uncheckConsumer(f -> {
-                Liquibase liquibase = new Liquibase(p.relativize(f).toString(), new DirectoryResourceAccessor(p.toFile()), database);
+                Liquibase liquibase = new Liquibase(p.relativize(f).toString(), new FileSystemResourceAccessor(p.toFile()), database);
                 liquibase.update(new Contexts());
             }));
         }
