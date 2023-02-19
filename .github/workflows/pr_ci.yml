@@ -42,14 +42,14 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-          - jdk: 11	
-            services: {}	
-            env: {}	
-          - jdk: 14	
-            services: {}	
-            env: {}	
-          - jdk: 16	
-            services: {}	
+          - jdk: 11
+            services: {}
+            env: {}
+          - jdk: 14
+            services: {}
+            env: {}
+          - jdk: 16
+            services: {}
             env: {}
           - jdk: 17
             services: {}
