@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -35,11 +34,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Scanner {
     public static final String SERVER = System.getProperty("DockerTestingHost", "http://localhost:4040");
     public static final String DEFAULT_MUSIC = System.getProperty("DockerTestingDefaultMusicFolder", "/tmp/music");
-    public static final ObjectMapper MAPPER = JsonMapper.builder()
+    public static final ObjectMapper MAPPER = new ObjectMapper()
             .enable(SerializationFeature.WRAP_ROOT_VALUE)
             .enable(DeserializationFeature.UNWRAP_ROOT_VALUE)
-            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-            .build();
+            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
     public static final RestTemplate rest = new RestTemplate();
     static {
         for (int i = 0; i < rest.getMessageConverters().size(); i++) {
