@@ -20,7 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class AddMediaFileIdToPodcastChannels implements CustomSqlChange {
 
@@ -62,7 +61,7 @@ public class AddMediaFileIdToPodcastChannels implements CustomSqlChange {
                 }
                 while (rs2.next()) {
                     String title = rs2.getString("title");
-                    if (Objects.nonNull(folderPath) && StringUtils.isNotEmpty(title)) {
+                    if (StringUtils.isNotEmpty(title)) {
                         Path channelFolder = folderPath.resolve(StringUtil.fileSystemSafe(title));
                         try (PreparedStatement st3 = conn.prepareStatement("SELECT id FROM media_file WHERE path=?;")) {
                             st3.setString(1, channelFolder.toString());

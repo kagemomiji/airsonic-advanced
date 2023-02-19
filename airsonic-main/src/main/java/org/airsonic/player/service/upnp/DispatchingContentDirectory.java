@@ -31,7 +31,6 @@ import org.fourthline.cling.support.model.item.MusicTrack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -59,27 +58,20 @@ public class DispatchingContentDirectory extends CustomContentDirectory {
 
     protected static final String SEPARATOR = "-";
 
-    @Lazy
     @Autowired
     private PlaylistUpnpProcessor playlistProcessor;
-    @Lazy
     @Autowired
     private MediaFileUpnpProcessor mediaFileProcessor;
     //@Autowired can't autowire because of the subclassing :P
-    @Lazy
     @Autowired//first checks type then field name to autowire
     private AlbumUpnpProcessor albumUpnpProcessor;
     //@Autowired can't autowire because of the subclassing :P
-    @Lazy
     @Autowired//first checks type then field name to autowire
     private RecentAlbumUpnpProcessor recentAlbumUpnpProcessor;
-    @Lazy
     @Autowired
     private ArtistUpnpProcessor artistProcessor;
-    @Lazy
     @Autowired
     private GenreUpnpProcessor genreProcessor;
-    @Lazy
     @Autowired
     private RootUpnpProcessor rootProcessor;
 

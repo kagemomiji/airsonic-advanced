@@ -164,7 +164,7 @@ public class AbstractDao {
 
     protected <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
         long t = System.nanoTime();
-        List<T> result = getJdbcTemplate().query(sql, rowMapper, convertToDBTypes(args));
+        List<T> result = getJdbcTemplate().query(sql, convertToDBTypes(args), rowMapper);
         log(sql, t);
         return result;
     }
@@ -178,7 +178,7 @@ public class AbstractDao {
 
     protected <T> List<T> queryForTypes(String sql, Class<T> type, Object... args) {
         long t = System.nanoTime();
-        List<T> result = getJdbcTemplate().queryForList(sql, type, convertToDBTypes(args));
+        List<T> result = getJdbcTemplate().queryForList(sql, convertToDBTypes(args), type);
         log(sql, t);
         return result;
     }

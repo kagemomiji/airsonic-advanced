@@ -23,6 +23,7 @@ import org.airsonic.player.domain.MediaFile;
 import org.airsonic.player.service.MediaFileService;
 import org.airsonic.player.service.metadata.JaudiotaggerParser;
 import org.airsonic.player.service.metadata.MetaDataParser;
+import org.airsonic.player.service.metadata.MetaDataParserFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,6 +49,8 @@ import java.util.Map;
 @RequestMapping("/editTags")
 public class EditTagsController {
 
+    @Autowired
+    private MetaDataParserFactory metaDataParserFactory;
     @Autowired
     private MediaFileService mediaFileService;
 

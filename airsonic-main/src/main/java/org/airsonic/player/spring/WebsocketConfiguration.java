@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -54,7 +53,7 @@ public class WebsocketConfiguration implements WebSocketMessageBrokerConfigurer 
     private String contextPath;
 
     @Autowired
-    public void setMessageBrokerTaskScheduler(@Lazy TaskScheduler taskScheduler) {
+    public void setMessageBrokerTaskScheduler(TaskScheduler taskScheduler) {
         this.messageBrokerTaskScheduler = taskScheduler;
     }
 
