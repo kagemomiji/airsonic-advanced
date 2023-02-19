@@ -14,11 +14,12 @@
   You should have received a copy of the GNU General Public License
   along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
 
-    Copyright 2017 (C) Airsonic Authors
+  Copyright 2017 (C) Airsonic Authors
   Based upon Subsonic, Copyright 2009 (C) Sindre Mehus
 */
 package org.airsonic.player.service.upnp;
 
+import org.airsonic.player.domain.MediaLibraryStatistics;
 import org.airsonic.player.service.search.IndexManager;
 import org.fourthline.cling.support.model.DIDLContent;
 import org.fourthline.cling.support.model.WriteStatus;
@@ -45,7 +46,7 @@ public class RootUpnpProcessor extends UpnpContentProcessor <Container, Containe
         root.setId(DispatchingContentDirectory.CONTAINER_ID_ROOT);
         root.setParentID("-1");
 
-        // MediaLibraryStatistics statistics = indexManager.getStatistics();
+        MediaLibraryStatistics statistics = indexManager.getStatistics();
         // returning large storageUsed values doesn't play nicely with
         // some upnp clients
         //root.setStorageUsed(statistics == null ? 0 : statistics.getTotalLengthInBytes());

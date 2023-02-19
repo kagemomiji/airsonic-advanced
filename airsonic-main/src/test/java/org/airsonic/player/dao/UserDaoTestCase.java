@@ -50,8 +50,8 @@ public class UserDaoTestCase extends DaoTestCaseBean2 {
         userDao.createUser(user, uc);
 
         User newUser = userDao.getAllUsers().get(0);
-        assertThat(newUser).usingRecursiveComparison().isEqualTo(user);
-        assertThat(userDao.getCredentials("sindre", App.AIRSONIC).get(0)).usingRecursiveComparison().isEqualTo(uc);
+        assertThat(newUser).isEqualToComparingFieldByField(user);
+        assertThat(userDao.getCredentials("sindre", App.AIRSONIC).get(0)).isEqualToComparingFieldByField(uc);
     }
 
     @Test
@@ -102,8 +102,8 @@ public class UserDaoTestCase extends DaoTestCaseBean2 {
 
         userDao.updateUser(user);
 
-        assertThat(userDao.getAllUsers().get(0)).usingRecursiveComparison().isEqualTo(user);
-        assertThat(userDao.getCredentials("sindre", App.AIRSONIC).get(0)).usingRecursiveComparison().isEqualTo(uc);
+        assertThat(userDao.getAllUsers().get(0)).isEqualToComparingFieldByField(user);
+        assertThat(userDao.getCredentials("sindre", App.AIRSONIC).get(0)).isEqualToComparingFieldByField(uc);
     }
 
     @Test
@@ -118,8 +118,8 @@ public class UserDaoTestCase extends DaoTestCaseBean2 {
 
         userDao.updateCredential(uc, newCreds);
 
-        assertThat(userDao.getAllUsers().get(0)).usingRecursiveComparison().isEqualTo(user);
-        assertThat(userDao.getCredentials("sindre", App.AIRSONIC).get(0)).usingRecursiveComparison().isEqualTo(newCreds);
+        assertThat(userDao.getAllUsers().get(0)).isEqualToComparingFieldByField(user);
+        assertThat(userDao.getCredentials("sindre", App.AIRSONIC).get(0)).isEqualToComparingFieldByField(newCreds);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class UserDaoTestCase extends DaoTestCaseBean2 {
         User user = new User("sindre", null);
         userDao.createUser(user, new UserCredential("sindre", "sindre", "secret", "noop", App.AIRSONIC));
 
-        assertThat(userDao.getUserByName("sindre", true)).usingRecursiveComparison().isEqualTo(user);
+        assertThat(userDao.getUserByName("sindre", true)).isEqualToComparingFieldByField(user);
 
         assertNull("Error in getUserByName().", userDao.getUserByName("sindre2", true));
         // assertNull("Error in getUserByName().", userDao.getUserByName("Sindre ", true)); // depends on the collation of the DB
