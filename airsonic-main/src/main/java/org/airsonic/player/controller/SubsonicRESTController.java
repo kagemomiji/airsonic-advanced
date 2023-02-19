@@ -1949,20 +1949,13 @@ public class SubsonicRESTController {
     @RequestMapping("/getCoverArt")
     public void getCoverArt(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
-        coverArtController.handleRequest(
-                ServletRequestUtils.getStringParameter(request, "id"),
-                ServletRequestUtils.getIntParameter(request, "size"),
-                ServletRequestUtils.getIntParameter(request, "offset", 60),
-                request, response);
+        coverArtController.handleRequest(request, response);
     }
 
     @RequestMapping("/getAvatar")
     public void getAvatar(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
-        Integer id = ServletRequestUtils.getIntParameter(request, "id");
-        String username = ServletRequestUtils.getStringParameter(request, "username");
-        boolean forceCustom = ServletRequestUtils.getBooleanParameter(request, "forceCustom", false);
-        avatarController.handleRequest(id, username, forceCustom, response);
+        avatarController.handleRequest(request, response);
     }
 
     @RequestMapping("/changePassword")

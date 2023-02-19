@@ -222,7 +222,7 @@ public class DownloadController {
             // get a list of all paths under the tree, plus their zip names and sizes
             Collection<Pair<Path, Pair<String, Long>>> pathsToZip = Stream
                     .concat(
-                            indices.stream().map(index -> Objects.isNull(index) ? null : files.get(index)).filter(Objects::nonNull).map(x -> Pair.of(x.getRelativePath(), x.getFolderId())),
+                            indices.stream().map(files::get).filter(Objects::nonNull).map(x -> Pair.of(x.getRelativePath(), x.getFolderId())),
                             additionalFiles.stream().filter(Objects::nonNull))
                     .flatMap(pf -> {
                         MusicFolder mf = mediaFolderService.getMusicFolderById(pf.getRight());
