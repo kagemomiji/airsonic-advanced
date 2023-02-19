@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.7</version>
+        <version>2.5.12</version>
         <relativePath />
     </parent>
 
@@ -25,8 +25,8 @@
         <failOnDependencyWarning>true</failOnDependencyWarning>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
-        <cxf.version>3.5.5</cxf.version>
-        <docker.container.repo>ghcr.io/airsonic-advanced/airsonic-advanced</docker.container.repo>
+        <cxf.version>3.4.3</cxf.version>
+        <docker.container.repo>airsonicadvanced/airsonic-advanced</docker.container.repo>
     </properties>
 
     <repositories>
@@ -93,7 +93,7 @@
             <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant</artifactId>
-                <version>1.10.11</version>
+                <version>1.10.5</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -109,7 +109,7 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.15.3</version>
+                <version>1.14.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -264,7 +264,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>analyze</id>
@@ -284,9 +283,9 @@
                                 <ignoredUsedUndeclaredDependency>*javax*:*</ignoredUsedUndeclaredDependency>
                                 <ignoredUsedUndeclaredDependency>org.hamcrest:*</ignoredUsedUndeclaredDependency>
                                 <ignoredUsedUndeclaredDependency>com.fasterxml.jackson.*:jackson-*</ignoredUsedUndeclaredDependency>
+                                <ignoredUsedUndeclaredDependency>org.apache.commons:commons-text*</ignoredUsedUndeclaredDependency>
                                 <ignoredUsedUndeclaredDependency>org.aspectj:aspectjweaver</ignoredUsedUndeclaredDependency>
                                 <ignoredUsedUndeclaredDependency>org.glassfish:jakarta.el</ignoredUsedUndeclaredDependency>
-                                <ignoredUsedUndeclaredDependency>org.junit.jupiter:junit-jupiter-api:*</ignoredUsedUndeclaredDependency>
                             </ignoredUsedUndeclaredDependencies>
                             <ignoredUnusedDeclaredDependencies>
                                 <ignoredUnusedDeclaredDependency>com.google.code.findbugs:jsr305:*</ignoredUnusedDeclaredDependency>
@@ -300,11 +299,11 @@
                                 <ignoredUnusedDeclaredDependency>org.springframework.security:*</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>org.springframework.boot:spring-boot*</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>jakarta.xml.ws:jakarta.xml.ws-api</ignoredUnusedDeclaredDependency>
+                                <ignoredUnusedDeclaredDependency>org.liquibase:liquibase-core</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>jakarta.xml.bind:jakarta.xml.bind-api*</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>org.apache.cxf:cxf-rt-frontend-jaxws</ignoredUnusedDeclaredDependency>
                                 <ignoredUnusedDeclaredDependency>jakarta.annotation:jakarta.annotation-api</ignoredUnusedDeclaredDependency>
-				                <ignoredUnusedDeclaredDependency>org.springframework:spring-aspects</ignoredUnusedDeclaredDependency>
-                                <ignoredUnusedDeclaredDependency>org.yaml:snakeyaml</ignoredUnusedDeclaredDependency>
+				<ignoredUnusedDeclaredDependency>org.springframework:spring-aspects</ignoredUnusedDeclaredDependency>
                             </ignoredUnusedDeclaredDependencies>
                         </configuration>
                     </execution>

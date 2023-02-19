@@ -15,7 +15,6 @@
         <docker.testing.container>it-container</docker.testing.container>
         <docker.testing.host>http://localhost:4040</docker.testing.host>
         <docker.testing.default-music-folder>/tmp/music</docker.testing.default-music-folder>
-        <snakeyaml.version>1.33</snakeyaml.version>
     </properties>
 
     <dependencies>
