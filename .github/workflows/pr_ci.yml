@@ -71,7 +71,7 @@ jobs:
           - jdk: 17
             services:
               postgres:
-                image: 'postgres:9.6-alpine'
+                image: 'postgres:12.7-alpine'
                 ports:
                   - 5432:5432
                 env:
@@ -107,27 +107,28 @@ jobs:
               spring_datasource_username: postgres
               spring_datasource_password: pass
               EXCLUDED_TEST_GROUPS: org.airsonic.player.util.EmbeddedTestCategory
+          #TODO for mysql,mariadb: add collation: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin when supported by github actions on services and remove the manual run commands
           - jdk: 17
-            db: 'mysql:5.7'	
-            executeManualCommand: true	
-            run: >	
-              docker pull ${DB};	
-              docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=${spring_datasource_password} -e MYSQL_DATABASE=airsonic -p 3306:3306 ${DB} --character-set-server=utf8mb4 --collation-server=utf8mb4_bin;	
-              until docker run --rm --link mysql:ms ${DB} mysql --host=ms --user=${spring_datasource_username} --password=${spring_datasource_password} -e 'SELECT 1' &> /dev/null; do sleep 1; done;	
-            services: {}	
-            services2:	
-              mysql:	
-                image: 'mysql:5.7'	
-                ports:	
-                  - 3306:3306	
-                env:	
-                  MYSQL_DATABASE: airsonic	
-                  MYSQL_ROOT_PASSWORD: pass	
-            env:	
-              DB: 'mysql:5.7'	
-              spring_datasource_url: 'jdbc:mysql://localhost:3306/airsonic'	
-              spring_datasource_username: root	
-              spring_datasource_password: pass	
+            db: 'mysql:5.7'
+            executeManualCommand: true
+            run: >
+              docker pull ${DB};
+              docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=${spring_datasource_password} -e MYSQL_DATABASE=airsonic -p 3306:3306 ${DB} --character-set-server=utf8mb4 --collation-server=utf8mb4_bin;
+              until docker run --rm --link mysql:ms ${DB} mysql --host=ms --user=${spring_datasource_username} --password=${spring_datasource_password} -e 'SELECT 1' &> /dev/null; do sleep 1; done;
+            services: {}
+            services2:
+              mysql:
+                image: 'mysql:5.7'
+                ports:
+                  - 3306:3306
+                env:
+                  MYSQL_DATABASE: airsonic
+                  MYSQL_ROOT_PASSWORD: pass
+            env:
+              DB: 'mysql:5.7'
+              spring_datasource_url: 'jdbc:mysql://localhost:3306/airsonic'
+              spring_datasource_username: root
+              spring_datasource_password: pass
               EXCLUDED_TEST_GROUPS: org.airsonic.player.util.EmbeddedTestCategory
           - jdk: 17
             db: 'mysql:8.0'
@@ -154,24 +155,24 @@ jobs:
           - jdk: 17
             db: 'mariadb:10.2'	
             executeManualCommand: true	
-            run: >	
-              docker pull ${DB};	
-              docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=${spring_datasource_password} -e MYSQL_DATABASE=airsonic -p 3306:3306 ${DB} --character-set-server=utf8mb4 --collation-server=utf8mb4_bin;	
-              until docker run --rm --link mysql:ms ${DB} mysql --host=ms --user=${spring_datasource_username} --password=${spring_datasource_password} -e 'SELECT 1' &> /dev/null; do sleep 1; done;	
-            services: {}	
-            services2:	
-              mysql:	
-                image: 'mariadb:10.2'	
-                ports:	
-                  - 3306:3306	
-                env:	
-                  MYSQL_DATABASE: airsonic	
-                  MYSQL_ROOT_PASSWORD: pass	
-            env:	
-              DB: 'mariadb:10.2'	
-              spring_datasource_url: 'jdbc:mariadb://localhost:3306/airsonic'	
-              spring_datasource_username: root	
-              spring_datasource_password: pass	
+            run: >
+              docker pull ${DB};
+              docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=${spring_datasource_password} -e MYSQL_DATABASE=airsonic -p 3306:3306 ${DB} --character-set-server=utf8mb4 --collation-server=utf8mb4_bin;
+              until docker run --rm --link mysql:ms ${DB} mysql --host=ms --user=${spring_datasource_username} --password=${spring_datasource_password} -e 'SELECT 1' &> /dev/null; do sleep 1; done;
+            services: {}
+            services2:
+              mysql:
+                image: 'mariadb:10.2'
+                ports:
+                  - 3306:3306
+                env:
+                  MYSQL_DATABASE: airsonic
+                  MYSQL_ROOT_PASSWORD: pass
+            env:
+              DB: 'mariadb:10.2'
+              spring_datasource_url: 'jdbc:mariadb://localhost:3306/airsonic'
+              spring_datasource_username: root
+              spring_datasource_password: pass
               EXCLUDED_TEST_GROUPS: org.airsonic.player.util.EmbeddedTestCategory
           - jdk: 17
             db: 'mariadb:10.5'
