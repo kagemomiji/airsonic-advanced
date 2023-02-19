@@ -153,8 +153,8 @@ jobs:
               spring_datasource_password: pass
               EXCLUDED_TEST_GROUPS: org.airsonic.player.util.EmbeddedTestCategory
           - jdk: 17
-            db: 'mariadb:10.2'	
-            executeManualCommand: true	
+            db: 'mariadb:10.2'
+            executeManualCommand: true
             run: >
               docker pull ${DB};
               docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=${spring_datasource_password} -e MYSQL_DATABASE=airsonic -p 3306:3306 ${DB} --character-set-server=utf8mb4 --collation-server=utf8mb4_bin;
