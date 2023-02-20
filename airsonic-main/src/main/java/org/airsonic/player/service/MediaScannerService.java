@@ -191,9 +191,9 @@ public class MediaScannerService {
         indexManager.startIndexing();
 
         CompletableFuture.runAsync(() -> doScanLibrary(pool, statistics), pool)
-                .whenComplete((r,e) -> indexManager.stopIndexing(statistics))
                 .thenRunAsync(() -> playlistService.importPlaylists(), pool)
                 .whenComplete((r,e) -> pool.shutdown())
+                .whenComplete((r,e) -> indexManager.stopIndexing(statistics))
                 .whenComplete((r,e) -> setScanning(false));
     }
 
