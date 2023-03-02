@@ -24,7 +24,7 @@
     <properties>
         <failOnDependencyWarning>true</failOnDependencyWarning>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
+        <java.version>11</java.version>
         <cxf.version>3.5.5</cxf.version>
         <docker.container.repo>ghcr.io/kagemomiji/airsonic-advanced</docker.container.repo>
     </properties>
