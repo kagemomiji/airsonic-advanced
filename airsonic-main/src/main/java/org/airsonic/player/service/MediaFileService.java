@@ -139,7 +139,7 @@ public class MediaFileService {
         return getMediaFile(relativePath, folder, MediaFile.NOT_INDEXED, minimizeDiskAccess);
     }
 
-    @Cacheable(cacheNames = "mediaFilePathCache", key = "#relativePath.toString().concat('-').concat(#folder.id).concat('-').concat(#startPosition.toString())", condition = "#root.target.memoryCacheEnabled", unless = "#result == null")
+    @Cacheable(cacheNames = "mediaFilePathCache", key = "#relativePath.toString().concat('-').concat(#folder.id).concat('-').concat(#startPosition == null ? '' : #startPosition.toString())", condition = "#root.target.memoryCacheEnabled", unless = "#result == null")
     public MediaFile getMediaFile(Path relativePath, MusicFolder folder, Double startPosition, boolean minimizeDiskAccess) {
         // Look in database.
         MediaFile result = mediaFileDao.getMediaFile(relativePath.toString(), folder.getId(), startPosition);
@@ -1001,7 +1001,7 @@ public class MediaFileService {
     }
 
     @Caching(evict = {
-        @CacheEvict(cacheNames = "mediaFilePathCache", key = "#mediaFile.path.concat('-').concat(#mediaFile.folderId).concat('-').concat(#startPosition.toString()"),
+        @CacheEvict(cacheNames = "mediaFilePathCache", key = "#mediaFile.path.concat('-').concat(#mediaFile.folderId).concat('-').concat(#mediaFile.startPosition == null ? '' : #mediaFile.startPosition.toString())"),
         @CacheEvict(cacheNames = "mediaFileIdCache", key = "#mediaFile.id", condition = "#mediaFile.id != null") })
     public void updateMediaFile(MediaFile mediaFile) {
         mediaFileDao.createOrUpdateMediaFile(mediaFile, file -> {
