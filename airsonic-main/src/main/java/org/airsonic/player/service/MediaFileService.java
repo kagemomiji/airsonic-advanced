@@ -37,7 +37,6 @@ import org.airsonic.player.service.metadata.MetaDataParserFactory;
 import org.airsonic.player.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.digitalmediaserver.cuelib.CueParser;
 import org.digitalmediaserver.cuelib.CueSheet;
 import org.digitalmediaserver.cuelib.Position;
@@ -61,6 +60,7 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -223,8 +223,8 @@ public class MediaFileService {
                 Instant mediaChanged = FileUtil.lastModified(mediaFile.getFullPath(folder.getPath()));
                 Instant cueChanged = FileUtil.lastModified(mediaFile.getFullIndexPath(folder.getPath()));
                 // update cue tracks
-                Map<Pair<String, Double>, MediaFile> storedChildrenMap = mediaFileDao.getMediaFilesByRelativePathAndFolderId(mediaFile.getPath(), mediaFile.getFolderId()).parallelStream()
-                    .filter(i -> i.getStartPosition() > MediaFile.NOT_INDEXED).collect(Collectors.toConcurrentMap(i -> Pair.of(i.getPath(), i.getStartPosition()), i -> i));
+                Map<String, MediaFile> storedChildrenMap = mediaFileDao.getMediaFilesByRelativePathAndFolderId(mediaFile.getPath(), mediaFile.getFolderId()).parallelStream()
+                    .filter(i -> i.getStartPosition() > MediaFile.NOT_INDEXED).collect(Collectors.toConcurrentMap(i -> String.format("%s,%.5f", i.getPath(), i.getStartPosition()), i -> i));
                 try {
                     createIndexedTracks(mediaFile, folder, storedChildrenMap);
                     // update media file
@@ -287,7 +287,7 @@ public class MediaFileService {
         // Make sure children are stored and up-to-date in the database.
         try {
             if (!minimizeDiskAccess) {
-                resultStream = Optional.ofNullable(updateChildren(parent)).map(x -> x.parallelStream()).orElse(null);
+                resultStream = Optional.ofNullable(updateChildren(parent)).map(x -> x.stream()).orElse(null);
             }
 
             if (resultStream == null) {
@@ -471,12 +471,12 @@ public class MediaFileService {
     private List<MediaFile> updateChildren(MediaFile parent) {
 
         // Check timestamps.
-        if (parent.getChildrenLastUpdated().compareTo(parent.getChanged()) >= 0) {
+        if (parent.getChildrenLastUpdated().truncatedTo(ChronoUnit.MICROS).compareTo(parent.getChanged().truncatedTo(ChronoUnit.MICROS)) >= 0) {
             return null;
         }
 
-        Map<Pair<String, Double>, MediaFile> storedChildrenMap = mediaFileDao.getChildrenOf(parent.getPath(), parent.getFolderId(), false).parallelStream()
-            .collect(Collectors.toConcurrentMap(i -> Pair.of(i.getPath(), i.getStartPosition()), i -> i));
+        ConcurrentMap<String, MediaFile> storedChildrenMap = mediaFileDao.getChildrenOf(parent.getPath(), parent.getFolderId(), false).parallelStream()
+            .collect(Collectors.toConcurrentMap(i -> String.format("%s,%.5f", i.getPath(), i.getStartPosition()), i -> i));
         MusicFolder folder = mediaFolderService.getMusicFolderById(parent.getFolderId());
         List<String> cueFiles = new ArrayList<>();
 
@@ -499,7 +499,7 @@ public class MediaFileService {
                     .filter(x -> securityService.getMusicFolderForFile(x, true, true).getId().equals(parent.getFolderId()))
                     .map(x -> folder.getPath().relativize(x))
                     .map(x -> {
-                        MediaFile media = storedChildrenMap.remove(Pair.of(x.toString(), MediaFile.NOT_INDEXED));
+                        MediaFile media = storedChildrenMap.remove(String.format("%s,%.5f", x.toString(), MediaFile.NOT_INDEXED));
                         if (media == null) {
                             media = createMediaFile(x, folder, null);
                             // Add children that are not already stored.
@@ -507,13 +507,12 @@ public class MediaFileService {
                         } else {
                             media = checkLastModified(media, folder, false); // has to be false, only time it's called
                         }
-
                         return media;
                     })
                     .collect(Collectors.toConcurrentMap(m -> FilenameUtils.getName(m.getPath()), m -> m));
 
             // collect indexed tracks, if any
-            List<MediaFile> indexedTracks = cueFiles.stream().parallel()
+            List<MediaFile> indexedTracks = cueFiles.stream()
                 .flatMap(c -> {
                     MediaFile base = null;
                     CueSheet cueSheet = getCueSheet(Paths.get(c));
@@ -539,7 +538,7 @@ public class MediaFileService {
                 .collect(Collectors.toList());
 
             // remove indexPath for deleted cuesheets, if any
-            List<MediaFile> result = bareFiles.values().stream().parallel()
+            List<MediaFile> result = bareFiles.values().stream()
                 .map(m -> {
                     if (m.hasIndex()) {
                         m.setIndexPath(null);
@@ -552,7 +551,7 @@ public class MediaFileService {
             result.addAll(indexedTracks);
 
             // Delete children that no longer exist on disk.
-            mediaFileDao.deleteMediaFiles(storedChildrenMap.keySet().stream().map(Pair::getKey).collect(Collectors.toList()), parent.getFolderId());
+            mediaFileDao.deleteMediaFiles(storedChildrenMap.values().stream().map(MediaFile::getPath).distinct().collect(Collectors.toList()), parent.getFolderId());
 
             // Update timestamp in parent.
             parent.setChildrenLastUpdated(parent.getChanged());
@@ -723,7 +722,7 @@ public class MediaFileService {
         return mediaFile;
     }
 
-    private List<MediaFile> createIndexedTracks(MediaFile base, MusicFolder folder, Map<Pair<String, Double>, MediaFile> storedChildrenMap) {
+    private List<MediaFile> createIndexedTracks(MediaFile base, MusicFolder folder, Map<String, MediaFile> storedChildrenMap) {
         try {
             List<MediaFile> children = new ArrayList<>();
             Path audioFile = base.getFullPath(folder.getPath());
@@ -769,10 +768,12 @@ public class MediaFileService {
 
                     double duration = nextStart - currentStart;
 
-                    MediaFile existingFile = storedChildrenMap.remove(Pair.of(basePath, currentStart));
+                    String childrenMapKey = String.format("%s, %.5f", basePath, currentStart);
+
+                    MediaFile existingFile = storedChildrenMap.remove(childrenMapKey);
                     // check whether track has same duration, cue file may have been edited to split tracks
                     if ((existingFile != null) && (existingFile.getDuration() != duration)) {
-                        storedChildrenMap.put(Pair.of(basePath, currentStart), existingFile);
+                        storedChildrenMap.put(childrenMapKey, existingFile);
                         existingFile = null;
                     }
                     MediaFile track = existingFile;
