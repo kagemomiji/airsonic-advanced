@@ -191,11 +191,12 @@ public class MediaFileService {
     }
 
     private boolean needsUpdate(MediaFile mediaFile, MusicFolder folder, boolean minimizeDiskAccess) {
-        return !(minimizeDiskAccess || (mediaFile.getVersion() >= MediaFileDao.VERSION
+        return !(minimizeDiskAccess
+                || mediaFile.isIndexedTrack() // ignore virtual track
+                || (mediaFile.getVersion() >= MediaFileDao.VERSION
                 && !settingsService.getFullScan()
-                && mediaFile.getChanged().compareTo(FileUtil.lastModified(mediaFile.getFullPath(folder.getPath())).truncatedTo(ChronoUnit.MICROS)) > -1
-                && (mediaFile.hasIndex() ? mediaFile.getChanged().compareTo(FileUtil.lastModified(mediaFile.getFullIndexPath(folder.getPath())).truncatedTo(ChronoUnit.MICROS)) > -1 : true)
-                && mediaFile.isIndexedTrack() //ignore virtual tracks from cue sheets
+                && mediaFile.getChanged().truncatedTo(ChronoUnit.MICROS).compareTo(FileUtil.lastModified(mediaFile.getFullPath(folder.getPath())).truncatedTo(ChronoUnit.MICROS)) > -1
+                && (mediaFile.hasIndex() ? mediaFile.getChanged().truncatedTo(ChronoUnit.MICROS).compareTo(FileUtil.lastModified(mediaFile.getFullIndexPath(folder.getPath())).truncatedTo(ChronoUnit.MICROS)) > -1 : true)
                 ));
     }
 
