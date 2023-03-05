@@ -296,18 +296,18 @@ public class MediaFileService {
                         .map(x -> checkLastModified(x, folder, minimizeDiskAccess))
                         .filter(x -> includeMediaFile(x, folder));
             }
-
-            resultStream = resultStream.filter(x -> (includeDirectories && x.isDirectory()) || (includeFiles && x.isFile()));
-
-            if (sort) {
-                resultStream = resultStream.sorted(new MediaFileComparator(settingsService.isSortAlbumsByYear()));
-            }
-
-            return resultStream.collect(Collectors.toList());
         } catch (Exception e) {
             LOG.error("get children of {} failed", parent.getPath(), e);
             return Collections.emptyList();
         }
+
+        resultStream = resultStream.filter(x -> (includeDirectories && x.isDirectory()) || (includeFiles && x.isFile()));
+
+        if (sort) {
+            resultStream = resultStream.sorted(new MediaFileComparator(settingsService.isSortAlbumsByYear()));
+        }
+
+        return resultStream.collect(Collectors.toList());
     }
 
     /**

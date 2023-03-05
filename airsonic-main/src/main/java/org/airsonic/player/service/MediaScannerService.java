@@ -306,30 +306,26 @@ public class MediaScannerService {
 
         indexManager.index(file, musicFolder);
 
-        try {
-            if (file.isDirectory()) {
-                mediaFileService.getChildrenOf(file, true, true, false, false).parallelStream()
-                        .forEach(child -> scanFile(child, musicFolder, statistics, albumCount, artists, albums, albumsInDb, genres, encountered));
-            } else {
-                if (musicFolder.getType() == MusicFolder.Type.MEDIA) {
-                    updateAlbum(file, musicFolder, statistics.getScanDate(), albumCount, albums, albumsInDb);
-                    updateArtist(file, musicFolder, statistics.getScanDate(), albumCount, artists);
-                }
-                statistics.incrementSongs(1);
+        if (file.isDirectory()) {
+            mediaFileService.getChildrenOf(file, true, true, false, false).parallelStream()
+                    .forEach(child -> scanFile(child, musicFolder, statistics, albumCount, artists, albums, albumsInDb, genres, encountered));
+        } else {
+            if (musicFolder.getType() == MusicFolder.Type.MEDIA) {
+                updateAlbum(file, musicFolder, statistics.getScanDate(), albumCount, albums, albumsInDb);
+                updateArtist(file, musicFolder, statistics.getScanDate(), albumCount, artists);
             }
+            statistics.incrementSongs(1);
+        }
 
-            updateGenres(file, genres);
-            encountered.computeIfAbsent(file.getFolderId(), k -> ConcurrentHashMap.newKeySet()).add(file.getPath());
+        updateGenres(file, genres);
+        encountered.computeIfAbsent(file.getFolderId(), k -> ConcurrentHashMap.newKeySet()).add(file.getPath());
 
-            // don't add indexed tracks to the total duration to avoid double-counting
-            if ((file.getDuration() != null) && (!file.isIndexedTrack())) {
-                statistics.incrementTotalDurationInSeconds(file.getDuration());
-            }
-            if (file.getFileSize() != null) {
-                statistics.incrementTotalLengthInBytes(file.getFileSize());
-            }
-        } catch (Exception e) {
-            LOG.warn("scan file failed : {} in {}", file.getPath(), musicFolder.getPath(), e);
+        // don't add indexed tracks to the total duration to avoid double-counting
+        if ((file.getDuration() != null) && (!file.isIndexedTrack())) {
+            statistics.incrementTotalDurationInSeconds(file.getDuration());
+        }
+        if (file.getFileSize() != null) {
+            statistics.incrementTotalLengthInBytes(file.getFileSize());
         }
     }
 
