@@ -63,7 +63,7 @@ public class BookmarksWSController {
     @MessageMapping("/get")
     @SendToUser(broadcast = false)
     public BookmarkInfo getBookmark(Principal user, int mediaFileId) {
-        return bookmarkToBookmarkInfo(bookmarkService.getBookmark(user.getName(), mediaFileId).get(), user.getName());
+        return bookmarkToBookmarkInfo(bookmarkService.getBookmark(user.getName(), mediaFileId).orElse(null), user.getName());
     }
 
     public static class BookmarkInfo {
