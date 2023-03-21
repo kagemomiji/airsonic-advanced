@@ -6,6 +6,7 @@ import org.airsonic.player.repository.BookmarkRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,7 @@ public class BookmarkService {
         if (mediaFile == null) {
             return false;
         }
+
         long durationMillis = mediaFile.getDuration() == null ? 0L : mediaFile.getDuration().longValue() * 1000L;
         if (durationMillis > 0L && durationMillis - positionMillis < 60000L) {
             LOG.debug("Deleting bookmark for {} because it's close to the end", mediaFileId);
@@ -53,7 +55,12 @@ public class BookmarkService {
         bookmark.setChanged(now);
         bookmark.setComment(comment);
         bookmark.setPositionMillis(positionMillis);
-        repository.saveAndFlush(bookmark);
+        try {
+            repository.saveAndFlush(bookmark);
+        } catch (DataIntegrityViolationException e) {
+            LOG.debug("duplicate registeration happend");
+            return false;
+        }
 
         brokerTemplate.convertAndSendToUser(username, "/queue/bookmarks/added", mediaFileId);
 

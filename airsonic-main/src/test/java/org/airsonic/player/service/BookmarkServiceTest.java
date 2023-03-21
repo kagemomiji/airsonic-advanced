@@ -102,6 +102,33 @@ public class BookmarkServiceTest {
     }
 
     @Test
+    public void testSetBookmarkReturnsFalseIfNotStarted() {
+        // Arrange
+        int mediaFileId = 123;
+        String username = "testUser";
+        String comment = "testComment";
+        int durationSeconds = 120; // 2 minutes
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setDuration((double)durationSeconds);
+
+        when(mediaFileService.getMediaFile(anyInt())).thenReturn(mediaFile);
+        when(bookmarkRepository.findOptByUsernameAndMediaFileId(anyString(), anyInt())).thenReturn(Optional.empty());
+
+        // Act
+        boolean result = bookmarkService.setBookmark(username, mediaFileId, 4999L, comment);
+
+        // Assert
+        assertFalse(result);
+        verify(bookmarkRepository, never()).findOptByUsernameAndMediaFileId(anyString(), anyInt());
+        verify(bookmarkRepository, never()).saveAndFlush(any());
+        verify(simpMessagingTemplate, never()).convertAndSendToUser(anyString(), anyString(), anyInt());
+        verify(bookmarkRepository, never()).deleteByUsernameAndMediaFileId(anyString(), anyInt());
+    }
+
+
+
+    @Test
     public void testSetBookmarkReturnsFalseIfCloseToEnd() {
         // Arrange
         int mediaFileId = 123;
