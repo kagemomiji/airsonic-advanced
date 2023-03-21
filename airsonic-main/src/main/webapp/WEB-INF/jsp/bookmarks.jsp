@@ -129,7 +129,7 @@
                       title: "<fmt:message key='personalsettings.album'/>",
                       render: function(album, type, row) {
                           if (type == "display" && album != null) {
-                              return $("<a>", {title: album, alt: album, text: album, target: "main"}).attr("href", "main.view?id=" + row.id)[0].outerHTML;
+                              return $("<a>", {title: album, alt: album, text: album, target: "main"}).attr("href", row.mediaFileEntry.albumUrl)[0].outerHTML;
                           }
                           return album;
                       }
