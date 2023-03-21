@@ -22,7 +22,7 @@ public class DaoTestCaseBean2 {
     @Autowired
     TestDao testDao;
 
-    JdbcTemplate getJdbcTemplate() {
+    protected JdbcTemplate getJdbcTemplate() {
         return testDao.getJdbcTemplate();
     }
 }

@@ -94,12 +94,7 @@ public class VideoPlayerController {
 
         Long position = ServletRequestUtils.getLongParameter(request, "position");
         if (position == null) {
-            Bookmark bookmark = bookmarkService.getBookmark(user.getUsername(), id);
-            if (bookmark != null) {
-                position = bookmark.getPositionMillis();
-            } else {
-                position = 0L;
-            }
+            position = bookmarkService.getBookmark(user.getUsername(), id).map(Bookmark::getPositionMillis).orElse(0L);
         }
         UserSettings settings = settingsService.getUserSettings(user.getUsername());
 

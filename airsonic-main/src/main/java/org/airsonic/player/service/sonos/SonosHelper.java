@@ -663,14 +663,14 @@ public class SonosHelper {
     }
 
     public PositionInformation getPositionInformation(int id, String username) {
-        Bookmark bookmark = bookmarkService.getBookmark(username, id);
-        if (bookmark == null) {
+        Optional<Bookmark> bookmark = bookmarkService.getBookmark(username, id);
+        if (bookmark.isEmpty()) {
             return null;
         }
         PositionInformation result = new PositionInformation();
         result.setId(String.valueOf(id));
         result.setIndex(0);
-        result.setOffsetMillis((int) bookmark.getPositionMillis());
+        result.setOffsetMillis((int) bookmark.get().getPositionMillis());
         return result;
     }
 
