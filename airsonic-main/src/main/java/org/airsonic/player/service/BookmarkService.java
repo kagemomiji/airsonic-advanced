@@ -41,6 +41,11 @@ public class BookmarkService {
             return false;
         }
 
+        // ignore not started media
+        if (positionMillis < 5000L) {
+            return false;
+        }
+
         long durationMillis = mediaFile.getDuration() == null ? 0L : mediaFile.getDuration().longValue() * 1000L;
         if (durationMillis > 0L && durationMillis - positionMillis < 60000L) {
             LOG.debug("Deleting bookmark for {} because it's close to the end", mediaFileId);
