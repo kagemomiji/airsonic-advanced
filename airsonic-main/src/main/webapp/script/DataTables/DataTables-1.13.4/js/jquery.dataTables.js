@@ -6169,7 +6169,7 @@
 		{
 			var col = columns[i];
 			var asSorting = col.asSorting;
-			var sTitle = col.ariaTitle || col.sTitle.replace(/<[^>]*>/g, "" ).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+			var sTitle = col.ariaTitle || col.sTitle.replace(/<\/?[^>]+(>|$)/g, "");
 			var th = col.nTh;
 	
 			// IE7 is throwing an error when setting these properties with jQuery's
@@ -15108,7 +15108,7 @@
 			return _empty(a) ?
 				'' :
 				a.replace ?
-					a.replace( /<[^>]*>/g, "" ).replace(/</g, "&lt;").replace(/>/g, "&gt;").toLowerCase() :
+					a.replace(/<\/?[^>]+(>|$)/g, "" ).toLowerCase() :
 					a+'';
 		},
 	
