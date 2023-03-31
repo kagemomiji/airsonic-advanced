@@ -187,6 +187,13 @@ $.extend( DataTable.ext.buttons, {
 				title = dt.column(idx).header().innerHTML;
 			}
 
+			function escapeHTML(text) {
+			  var replacements = { "<": "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;", "'": "&#39;" };
+			  return text.replace(/[<>&"']/g, function(character) {
+			    return replacements[character];
+			  });
+			}
+
 			title = title
 				.replace(/\n/g," ")        // remove new lines
 				.replace(/<br\s*\/?>/gi, " ")  // replace line breaks with spaces
@@ -194,6 +201,7 @@ $.extend( DataTable.ext.buttons, {
 				.replace(/<!--[\s\S]*?-->/gi, "") // strip HTML comments
 				.replace(/<[^>]*>/g, "")   // strip HTML
 				.replace(/^\s+|\s+$/g,""); // trim
+			title = escapeHTML(title);
 
 			return conf.columnText ?
 				conf.columnText( dt, idx, title ) :
