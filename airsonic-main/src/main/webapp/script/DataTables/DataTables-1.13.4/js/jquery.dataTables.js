@@ -6154,15 +6154,6 @@
 		/* Tell the draw function that we have sorted the data */
 		oSettings.bSorted = true;
 	}
-
-	function escapeHTML(text) {
-	  var replacements = { "<": "&lt;", ">": "&gt;", "&": "&amp;", "\"": "&quot;", "'": "&#39;" };
-	  return text.replace(/[<>&"']/g, function(character) {
-	    return replacements[character];
-	  });
-	}
-
-	
 	
 	function _fnSortAria ( settings )
 	{
@@ -6178,7 +6169,7 @@
 		{
 			var col = columns[i];
 			var asSorting = col.asSorting;
-			var sTitle = col.ariaTitle || escapeHTML(col.sTitle.replace(/<[^>]*>/g, "" ));
+			var sTitle = col.ariaTitle || __htmlEscapeEntities(col.sTitle.replace(/<[^>]*>/g, "" ));
 			var th = col.nTh;
 	
 			// IE7 is throwing an error when setting these properties with jQuery's
@@ -15117,7 +15108,7 @@
 			return _empty(a) ?
 				'' :
 				a.replace ?
-					replaceHtml(a.replace( /<[^>]*>/g, "" ).toLowerCase()) :
+					__htmlEscapeEntities(a.replace( /<[^>]*>/g, "" )).toLowerCase() :
 					a+'';
 		},
 	
