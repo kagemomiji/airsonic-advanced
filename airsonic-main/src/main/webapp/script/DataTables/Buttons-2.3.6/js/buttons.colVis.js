@@ -199,7 +199,7 @@ $.extend( DataTable.ext.buttons, {
 				.replace(/<br\s*\/?>/gi, " ")  // replace line breaks with spaces
 				.replace(/<select(.*?)<\/select>/g, "") // remove select tags, including options text
 				.replace(/<\/?[^>]+(>|$)/g, "")   // strip HTML
-				.replace(/<\!--[\s\S]*?-->/gi, "") // strip HTML comments
+				.replace(/<!--[\s\S]*?-->(?=-->)|<!--[\s\S]*?-->\s*$/gi, "") //strip comments
 				.replace(/^\s+|\s+$/g,""); // trim
 
 			return conf.columnText ?
