@@ -194,13 +194,15 @@ $.extend( DataTable.ext.buttons, {
 			  });
 			}
 
-			title = escapeHTML(title
+			title = title
 				.replace(/\n/g," ")        // remove new lines
 				.replace(/<br\s*\/?>/gi, " ")  // replace line breaks with spaces
 				.replace(/<select(.*?)<\/select>/g, "") // remove select tags, including options text
 				.replace(/<!--[\s\S]*?-->/gi, "") // strip HTML comments
 				.replace(/<[^>]*>/g, "")   // strip HTML
-				.replace(/^\s+|\s+$/g,"")); // trim
+				.replace(/>/g, "&gt;")
+				.replace(/</g, "&lt;")
+				.replace(/^\s+|\s+$/g,""); // trim
 
 			return conf.columnText ?
 				conf.columnText( dt, idx, title ) :
