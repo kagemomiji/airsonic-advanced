@@ -3,6 +3,30 @@
 # kagemomiji/airsonic-advanced
 # -->
 
+## v11.1.2 - 29 Apr 2023
+
+Fixes:
+- Fixed invalid `Shoutcast` response which caused bad behaviors on external players
+- Fixed mediaelement-and-player.js not found error when custom context path is set
+- Fixed an issue of overflowed library duration on left side bar when the library contains invalid cue sheets.
+- Fixed an issue about `Recently Played` showing duplicated items when using external players.
+
+Changes:
+- Replace upload library from `commons-fileupload` to `spring-boot-starter-web`
+- The following properties are loaded by ConfigurationProperties instead of SettingsService.
+  - airsonic.home
+  - airsonic.defaultMusicFolder
+  - airsonic.defaultPodcastFolder
+  - airsonic.defaultPlaylistFolder
+
+Security:
+- Bump up spring-boot-starter-parent to 2.7.11 for CVEs
+- Fix some vulnerabilities from Java codes detected by CodeQL
+
+Chores:
+- Add troubleshooting document. See [here](docs/troubleshooting.md)
+- Treat CodeQL action warning
+
 ## v11.1.1 - 5 Apr 2023
 
 > **Note**  
