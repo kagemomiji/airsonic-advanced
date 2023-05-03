@@ -50,7 +50,7 @@
                 <form:option value="-1" label="${all}"/>
                 <form:option value="1" label="${one}"/>
 
-                <c:forTokens items="2 3 4 5 10 20 30 50" delims=" " var="count">
+                <c:forTokens items="2 3 4 5 10 20 30 50 100 125 150 200" delims=" " var="count">
                     <fmt:message key="podcastsettings.keep.many" var="many"><fmt:param value="${count}"/></fmt:message>
                     <form:option value="${count}" label="${many}"/>
                 </c:forTokens>
