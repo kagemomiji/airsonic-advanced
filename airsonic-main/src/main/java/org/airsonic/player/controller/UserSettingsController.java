@@ -238,7 +238,11 @@ public class UserSettingsController {
         userSettings.setChanged(Instant.now());
         settingsService.updateUserSettings(userSettings);
 
-        Arrays.stream(command.getAllowedMusicFolderIds()).forEach(allowedMusicFolderIds::add);
+        // NOTE: This can happen if none of the configured media directories exist or if none are enabled.
+        //       Primitive arrays are still behind a pointer technically, and that pointer is null if not initialized.
+        if (command.getAllowedMusicFolderIds() != null) {
+            Arrays.stream(command.getAllowedMusicFolderIds()).forEach(allowedMusicFolderIds::add);
+        }
         mediaFolderService.setMusicFoldersForUser(command.getUsername(), allowedMusicFolderIds);
     }
 
