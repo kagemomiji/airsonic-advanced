@@ -17,7 +17,7 @@
         <chameleon.version>2.0.0-RELEASE</chameleon.version>
         <tomcat.server.scope>provided</tomcat.server.scope>
         <!-- For fixing import/export due to https://github.com/liquibase/liquibase/issues/1598 -->
-        <liquibase.version>4.22.0</liquibase.version>
+        <liquibase.version>4.27.0</liquibase.version>
         <logback.version>1.4.14</logback.version>
         <mockito.version>5.10.0</mockito.version>
         <mariadb.version>3.3.2</mariadb.version>
