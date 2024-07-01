@@ -280,7 +280,7 @@
                 <plugin>
                     <groupId>org.owasp</groupId>
                     <artifactId>dependency-check-maven</artifactId>
-                    <version>9.2.0</version>
+                    <version>10.0.0</version>
                     <inherited>true</inherited>
                     <configuration>
                         <cveValidForHours>24</cveValidForHours>
