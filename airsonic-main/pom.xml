@@ -283,8 +283,7 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>4.0.4</version>
-       </dependency>
+        </dependency>
 
         <dependency>
             <groupId>jakarta.servlet</groupId>

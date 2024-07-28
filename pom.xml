@@ -192,7 +192,12 @@
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
                 <version>4.2.26</version>
-        </dependency>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>org.eclipse.persistence.moxy</artifactId>
+                <version>4.0.3</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
