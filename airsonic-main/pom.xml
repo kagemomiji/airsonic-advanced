@@ -346,7 +346,7 @@
             <artifactId>cling-support</artifactId>
             <!-- Cling removed the org.fourthline.cling.transport.impl.apache package in 2.1, which is needed to make Cling work with Tomcat. -->
             <!-- Don't upgrade this unless you can test UPnP/DLNA support properly! -->
-            <version>2.0.1</version>
+            <version>2.1.2</version>
         </dependency>
 
         <dependency>
