@@ -48,12 +48,12 @@ PARAMETERS
                 </th:block>
 
                 <a th:if="${showLink}" th:href="${targetUrl}" th:title="${caption1}">
-                    <img th:src="${coverArtUrl}" th:id="${imgId}" th:alt="${caption1}" style="display:none">
+                    <img th:src="${coverArtUrl}" th:id="${imgId}" th:alt="${caption1}" style="display:none" loading="lazy">
                 </a>
-                <img th:unless="${showLink}" th:src="${coverArtUrl}" th:id="${imgId}" th:alt="${caption1}" style="display:none">
+                <img th:unless="${showLink}" th:src="${coverArtUrl}" th:id="${imgId}" th:alt="${caption1}" style="display:none" loading="lazy">
 
                 <a th:if="${showZoom}" th:href="@{/coverArt(id=${albumId})}" class="fancy" rel="zoom" th:title="${param.caption1}">
-                    <img th:src="${coverArtUrl}" th:id="${imgId}" th:alt="${caption1}" style="display:none">
+                    <img th:src="${coverArtUrl}" th:id="${imgId}" th:alt="${captionh1}" style="display:none" loading="lazy">
                 </a>
             </div>
 
