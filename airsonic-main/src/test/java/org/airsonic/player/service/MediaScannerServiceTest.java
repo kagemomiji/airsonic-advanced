@@ -17,9 +17,9 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.nio.file.Path;
 import java.time.Instant;
@@ -44,16 +44,16 @@ public class MediaScannerServiceTest {
     @Autowired
     private MediaScannerService mediaScannerService;
 
-    @SpyBean
+    @MockitoSpyBean
     private MediaFileService mediaFileService;
 
-    @SpyBean
+    @MockitoSpyBean
     private SettingsService settingsService;
 
-    @SpyBean
+    @MockitoSpyBean
     private IndexManager indexManager;
 
-    @SpyBean
+    @MockitoSpyBean
     private AirsonicScanConfig scanConfig;
 
     @Autowired

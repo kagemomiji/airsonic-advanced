@@ -54,11 +54,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -81,17 +81,17 @@ import static org.mockito.Mockito.when;
 @EnableConfigurationProperties({AirsonicHomeConfig.class})
 public class PodcastDownloadClientTest {
 
-    @MockBean
+    @MockitoBean
     private PodcastEpisodeRepository podcastEpisodeRepository;
-    @MockBean
+    @MockitoBean
     private PodcastPersistenceService podcastPersistenceService;
-    @MockBean
+    @MockitoBean
     private MediaFolderService mediaFolderService;
-    @MockBean
+    @MockitoBean
     private MediaFileService mediaFileService;
-    @MockBean
+    @MockitoBean
     private SecurityService securityService;
-    @MockBean
+    @MockitoBean
     private VersionService versionService;
     @TempDir
     private Path tempFolder;

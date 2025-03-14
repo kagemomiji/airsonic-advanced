@@ -14,7 +14,7 @@ public class PingIT {
     @Test
     public void pingMissingAuthTest() {
         ResponseEntity<String> response = Scanner.rest.getForEntity(
-                UriComponentsBuilder.fromHttpUrl(Scanner.SERVER + "/rest/ping").toUriString(),
+                UriComponentsBuilder.fromUriString(Scanner.SERVER + "/rest/ping").toUriString(),
                 String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -61,7 +61,7 @@ public class Scanner {
         assertFalse(isScanning());
 
         String startScan = rest.getForObject(
-                addRestParameters(UriComponentsBuilder.fromHttpUrl(SERVER + "/rest/startScan")).toUriString(),
+                addRestParameters(UriComponentsBuilder.fromUriString(SERVER + "/rest/startScan")).toUriString(),
                 String.class);
 
         System.out.println(startScan);
@@ -78,7 +78,7 @@ public class Scanner {
 
     private static boolean isScanning() {
         return rest.getForObject(
-                addRestParameters(UriComponentsBuilder.fromHttpUrl(SERVER + "/rest/getScanStatus"))
+                addRestParameters(UriComponentsBuilder.fromUriString(SERVER + "/rest/getScanStatus"))
                         .queryParam("f", "json").toUriString(),
                 SubsonicResponse.class)
             .getScanStatus().isScanning();
@@ -95,7 +95,7 @@ public class Scanner {
 
     public static List<Child> getMediaFilesInMusicFolder() {
         List<MusicFolder> musicFolder = rest.getForObject(
-                addRestParameters(UriComponentsBuilder.fromHttpUrl(SERVER + "/rest/getMusicFolders"))
+                addRestParameters(UriComponentsBuilder.fromUriString(SERVER + "/rest/getMusicFolders"))
                         .queryParam("f", "json")
                         .toUriString(),
                 SubsonicResponse.class)
@@ -108,7 +108,7 @@ public class Scanner {
 
     private static List<Child> getMediaFiles(int folderId) {
         return rest.getForObject(
-                addRestParameters(UriComponentsBuilder.fromHttpUrl(SERVER + "/rest/getIndexes"))
+                addRestParameters(UriComponentsBuilder.fromUriString(SERVER + "/rest/getIndexes"))
                         .queryParam("f", "json")
                         .queryParam("musicFolderId", folderId)
                         .toUriString(),
@@ -120,7 +120,7 @@ public class Scanner {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(MediaType.parseMediaTypes("audio/webm,audio/ogg,audio/wav,audio/*;"));
         ResponseEntity<byte[]> response = rest.exchange(
-                addRestParameters(UriComponentsBuilder.fromHttpUrl(SERVER + "/rest/stream"))
+                addRestParameters(UriComponentsBuilder.fromUriString(SERVER + "/rest/stream"))
                         .queryParam("id", mediaFileId)
                         .toUriString(),
                 HttpMethod.GET,

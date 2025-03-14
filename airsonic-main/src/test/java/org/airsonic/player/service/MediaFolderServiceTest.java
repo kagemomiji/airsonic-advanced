@@ -22,8 +22,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -52,16 +52,16 @@ public class MediaFolderServiceTest {
     @Autowired
     private MediaFolderService mediaFolderService;
 
-    @SpyBean
+    @MockitoSpyBean
     private MusicFolderRepository musicFolderRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     private UserRepository userRepository;
 
-    @MockBean
+    @MockitoBean
     private CoverArtRepository coverArtRepository;
 
-    @MockBean
+    @MockitoBean
     private MediaFileRepository mediaFileRepository;
 
     @TempDir

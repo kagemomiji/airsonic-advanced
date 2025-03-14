@@ -53,7 +53,7 @@ public class PodcastIndexService {
             if (decoded != null) {
                 HttpUriRequest req = createRequest(
                         UriComponentsBuilder
-                                .fromHttpUrl(StringUtils.isBlank(userSettings.getPodcastIndexUrl()) ? DEFAULT_URL
+                                .fromUriString(StringUtils.isBlank(userSettings.getPodcastIndexUrl()) ? DEFAULT_URL
                                         : userSettings.getPodcastIndexUrl())
                                 .queryParam("q", search).toUriString(),
                         cred.getAppUsername(), decoded);

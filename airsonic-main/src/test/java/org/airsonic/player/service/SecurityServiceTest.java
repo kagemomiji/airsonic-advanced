@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.nio.file.Path;
 import java.util.Date;
@@ -46,10 +46,10 @@ public class SecurityServiceTest {
     @Autowired
     private SecurityService securityService;
 
-    @SpyBean
+    @MockitoSpyBean
     private UserRepository userRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     private UserCredentialRepository userCredentialRepository;
 
     @TempDir

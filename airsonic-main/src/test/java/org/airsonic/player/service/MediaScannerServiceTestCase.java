@@ -24,10 +24,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -79,7 +79,7 @@ public class MediaScannerServiceTestCase {
     @Autowired
     private MusicFolderRepository musicFolderRepository;
 
-    @SpyBean
+    @MockitoSpyBean
     private MediaFileService mediaFileService;
 
     @Autowired
@@ -94,7 +94,7 @@ public class MediaScannerServiceTestCase {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @SpyBean
+    @MockitoSpyBean
     private SettingsService settingsService;
 
     @TempDir

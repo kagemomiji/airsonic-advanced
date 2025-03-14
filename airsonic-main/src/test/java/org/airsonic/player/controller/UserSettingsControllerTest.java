@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -41,17 +41,17 @@ import static org.mockito.Mockito.*;
 @EnableConfigurationProperties({AirsonicHomeConfig.class})
 public class UserSettingsControllerTest {
 
-    @MockBean
+    @MockitoBean
     private SecurityService securityService;
-    @MockBean
+    @MockitoBean
     private SettingsService settingsService;
-    @MockBean
+    @MockitoBean
     private MediaFolderService mediaFolderService;
-    @MockBean
+    @MockitoBean
     private TranscodingService transcodingService;
-    @MockBean
+    @MockitoBean
     private PersonalSettingsService personalSettingsService;
-    @MockBean
+    @MockitoBean
     private UserService userService;
 
     @Autowired

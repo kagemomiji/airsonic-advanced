@@ -10,7 +10,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -26,9 +26,9 @@ public class TranscodingServiceIntTest {
 
     @Autowired
     private TranscodingService transcodingService;
-    @SpyBean
+    @MockitoSpyBean
     private PlayerRepository playerRepository;
-    @SpyBean
+    @MockitoSpyBean
     private TranscodingRepository transcodingRepository;
 
     @TempDir
