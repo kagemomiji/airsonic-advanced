@@ -46,6 +46,7 @@ public class MetaData {
     private Integer height;
     private String musicBrainzReleaseId;
     private String musicBrainzRecordingId;
+    private String isrc;
     private final List<Track> tracks = new ArrayList<>();
     private final List<Chapter> chapters = new ArrayList<>();
 
@@ -167,6 +168,14 @@ public class MetaData {
 
     public void setMusicBrainzRecordingId(String musicBrainzRecordingId) {
         this.musicBrainzRecordingId = musicBrainzRecordingId;
+    }
+
+    public String getISRC() {
+        return isrc;
+    }
+
+    public void setISRC(String isrc) {
+        this.isrc = isrc;
     }
 
     public void addTrack(Track track) {

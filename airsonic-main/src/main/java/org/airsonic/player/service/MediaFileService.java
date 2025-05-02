@@ -241,6 +241,14 @@ public class MediaFileService {
         return mediaFileRepository.findByPath(relativePath.toString());
     }
 
+    public Optional<MediaFile> getMediaFileByISRC(String isrc) {
+        return mediaFileRepository.findByIsrc(isrc);
+    }
+
+    public List<MediaFile> getMediaFilesByISRC(Iterable<String> isrc) {
+        return mediaFileRepository.findByIsrcIn(isrc);
+    }
+
     public MediaFile getParentOf(MediaFile mediaFile) {
         return getParentOf(mediaFile, settingsService.isFastCacheEnabled());
     }
@@ -1025,6 +1033,7 @@ public class MediaFileService {
                 mediaFile.setWidth(metaData.getWidth());
                 mediaFile.setMusicBrainzReleaseId(metaData.getMusicBrainzReleaseId());
                 mediaFile.setMusicBrainzRecordingId(metaData.getMusicBrainzRecordingId());
+                mediaFile.setISRC(metaData.getISRC());
             }
             String format = StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath())));
             mediaFile.setFormat(format);
@@ -1262,6 +1271,7 @@ public class MediaFileService {
                     track.setFormat(base.getFormat());
                     track.setStartPosition(currentStart);
                     track.setDuration(duration);
+                    track.setISRC(base.getISRC());
                     // estimate file size based on duration and whole file size
                     long estimatedSize = (long) (duration / wholeFileLength * wholeFileSize);
                     // if estimated size is within of whole file size, use it. Otherwise use whole file size divided by number of tracks

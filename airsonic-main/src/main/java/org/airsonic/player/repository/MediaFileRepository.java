@@ -87,6 +87,9 @@ public interface MediaFileRepository extends JpaRepository<MediaFile, Integer> {
     public List<MediaFile> findByAlbumArtistAndAlbumNameAndMediaTypeInAndPresentTrue(String albumArtist, String albumName,
             List<MediaType> mediaTypes, Sort sort);
 
+    public Optional<MediaFile> findByIsrc(String isrc);
+
+    public List<MediaFile> findByIsrcIn(Iterable<String> isrcs);
 
     public Optional<MediaFile> findByPathAndFolderAndStartPosition(String path, MusicFolder folder, Double startPosition);
 

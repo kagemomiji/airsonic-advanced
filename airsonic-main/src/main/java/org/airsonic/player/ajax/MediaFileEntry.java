@@ -35,6 +35,7 @@ public class MediaFileEntry {
     private final String remoteStreamUrl;
     private final String coverArtUrl;
     private final String remoteCoverArtUrl;
+    private final String isrc;
 
     public MediaFileEntry(
             int id,
@@ -64,7 +65,9 @@ public class MediaFileEntry {
             String streamUrl,
             String remoteStreamUrl,
             String coverArtUrl,
-            String remoteCoverArtUrl) {
+            String remoteCoverArtUrl,
+            String isrc
+    ) {
         this.id = id;
         this.trackNumber = trackNumber;
         this.discNumber = discNumber;
@@ -93,6 +96,7 @@ public class MediaFileEntry {
         this.remoteStreamUrl = remoteStreamUrl;
         this.coverArtUrl = coverArtUrl;
         this.remoteCoverArtUrl = remoteCoverArtUrl;
+        this.isrc = isrc;
     }
 
     public int getId() {
@@ -223,6 +227,10 @@ public class MediaFileEntry {
         return lastScanned;
     }
 
+    public String getISRC() {
+        return isrc;
+    }
+
     public static MediaFileEntry fromMediaFile(MediaFile file, Locale locale, boolean starred, boolean folderAccess, String streamUrl, String remoteStreamUrl, String remoteCoverArtUrl) {
         return new MediaFileEntry(file.getId(), file.getTrackNumber(), file.getDiscNumber(), file.getName(),
                 file.getArtist(), file.getAlbumArtist(), file.getAlbumName(), file.getGenre(), file.getYear(), formatBitRate(file),
@@ -231,7 +239,7 @@ public class MediaFileEntry {
                 StringUtil.formatBytes(file.getFileSize(), locale == null ? Locale.ENGLISH : locale),
                 file.getPlayCount(), file.getLastPlayed(), file.getCreated(), file.getChanged(), file.getLastScanned(),
                 starred, file.isPresent() && folderAccess, "main.view?id=" + file.getId(), streamUrl, remoteStreamUrl,
-                "coverArt.view?id=" + file.getId(), remoteCoverArtUrl);
+                "coverArt.view?id=" + file.getId(), remoteCoverArtUrl, file.getISRC());
     }
 
     private static String formatBitRate(MediaFile mediaFile) {

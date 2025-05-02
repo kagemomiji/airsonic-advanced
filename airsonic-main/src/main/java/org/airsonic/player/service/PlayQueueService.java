@@ -613,7 +613,8 @@ public class PlayQueueService {
                     streamUrl, // Stream URL
                     streamUrl, // Remote stream URL
                     null, // Cover art URL
-                    null // Remote cover art URL
+                    null, // Remote cover art URL
+                    ""  // ISRC XXX: Not implemented
             ));
         }
 

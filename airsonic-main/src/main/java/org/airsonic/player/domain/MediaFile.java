@@ -152,6 +152,9 @@ public class MediaFile {
     @Column(name = "mb_recording_id", nullable = true)
     private String musicBrainzRecordingId;
 
+    @Column(name = "isrc", nullable = true)
+    private String isrc;
+
     @Transient
     private Double averageRating = 0.0;
 
@@ -475,6 +478,14 @@ public class MediaFile {
 
     public void setMusicBrainzRecordingId(String musicBrainzRecordingId) {
         this.musicBrainzRecordingId = musicBrainzRecordingId;
+    }
+
+    public String getISRC() {
+        return isrc;
+    }
+
+    public void setISRC(String isrc) {
+        this.isrc = isrc;
     }
 
     /**

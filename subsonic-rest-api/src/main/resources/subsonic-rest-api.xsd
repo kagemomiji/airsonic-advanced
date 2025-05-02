@@ -255,6 +255,7 @@
         <xs:attribute name="bookmarkPosition" type="xs:long" use="optional"/>  <!-- In millis. Added in 1.10.1 -->
         <xs:attribute name="originalWidth" type="xs:int" use="optional"/>  <!-- Added in 1.13.0 -->
         <xs:attribute name="originalHeight" type="xs:int" use="optional"/>  <!-- Added in 1.13.0 -->
+        <xs:attribute name="isrc" type="xs:string" use="optional"/>  <!-- Added in 1.15.0 -->
     </xs:complexType>
 
     <xs:simpleType name="MediaType">

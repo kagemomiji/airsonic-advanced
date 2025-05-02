@@ -505,7 +505,8 @@ public class SubsonicRESTController {
         jaxbWriter.writeResponse(request, response, res);
     }
 
-    private <T extends ArtistID3> T createJaxbArtist(T jaxbArtist, org.airsonic.player.domain.Artist artist, String username) {
+    private <T extends ArtistID3> T createJaxbArtist(T jaxbArtist, org.airsonic.player.domain.Artist artist, String username)
+    {
         jaxbArtist.setId(String.valueOf(artist.getId()));
         jaxbArtist.setName(artist.getName());
         jaxbArtist.setStarred(jaxbWriter.convertDate(artistService.getStarredDate(artist.getId(), username)));
@@ -1072,6 +1073,8 @@ public class SubsonicRESTController {
         writeEmptyResponse(request, response);
     }
 
+
+
     @RequestMapping({"/deletePlaylist", "/deletePlaylist.view"})
     public void deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request, true);
@@ -1291,6 +1294,7 @@ public class SubsonicRESTController {
             child.setContentType(StringUtil.getMimeType(suffix));
             child.setIsVideo(mediaFile.isVideo());
             child.setPath(mediaFile.getPath());
+            child.setIsrc(mediaFile.getISRC());
 
             Album album = albumService.getAlbumByMediaFile(mediaFile);
 
