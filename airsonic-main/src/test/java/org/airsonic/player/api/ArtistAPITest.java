@@ -30,10 +30,14 @@ import org.airsonic.player.domain.Player;
 import org.airsonic.player.service.AlbumService;
 import org.airsonic.player.service.ArtistService;
 import org.airsonic.player.service.CoverArtService;
+import org.airsonic.player.service.JaxbContentService;
 import org.airsonic.player.service.LastFmService;
+import org.airsonic.player.service.LibraryStatusService;
 import org.airsonic.player.service.MediaFileService;
 import org.airsonic.player.service.MediaFolderService;
+import org.airsonic.player.service.MusicIndexService;
 import org.airsonic.player.service.PlayerService;
+import org.airsonic.player.service.RatingService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -91,8 +95,20 @@ public class ArtistAPITest {
     @MockitoBean
     private LastFmService lastFmService;
 
+    @MockitoBean
+    private LibraryStatusService libraryStatusService;
+
+    @MockitoSpyBean
+    private MusicIndexService musicIndexService;
+
+    @MockitoBean
+    private RatingService ratingService;
+
     @MockitoSpyBean
     private MediaFileService mediaFileService;
+
+    @MockitoSpyBean
+    private JaxbContentService jaxbContentService;
 
     @Autowired
     private PlayerService playerService;
@@ -583,5 +599,4 @@ public class ArtistAPITest {
         assertFalse(artistInfo2.contains("musicBrainzId"));
         assertFalse(artistInfo2.contains("lastFmUrl"));
     }
-
 }

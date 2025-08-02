@@ -208,7 +208,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.27.1</version>
+            <version>1.28.0</version>
         </dependency>
         <dependency>
 <!--            compression library-->
@@ -694,7 +694,7 @@
                 <!-- Change to non-snapshot version once it is released (change groupId) -->
                 <groupId>dev.aspectj</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.14</version>
+                <version>1.14.1</version>
                 <dependencies>
                   <dependency>
                     <groupId>org.aspectj</groupId>

@@ -14,6 +14,7 @@
  You should have received a copy of the GNU General Public License
  along with Airsonic.  If not, see <http://www.gnu.org/licenses/>.
 
+ Copyright 2025 (C) Y.Tory
  Copyright 2016 (C) Airsonic Authors
  Based upon Subsonic, Copyright 2009 (C) Sindre Mehus
  */
@@ -22,7 +23,6 @@ package org.airsonic.player.controller;
 import org.airsonic.player.domain.*;
 import org.airsonic.player.service.*;
 import org.airsonic.player.service.search.IndexManager;
-import org.airsonic.player.util.FileUtil;
 import org.airsonic.player.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,8 +35,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.nio.file.Path;
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -48,8 +46,6 @@ import java.util.*;
 @RequestMapping({"/left", "/left.view"})
 public class LeftController {
 
-    // Update this time if you want to force a refresh in clients.
-    private static final Instant LAST_COMPATIBILITY_TIME = Instant.parse("2012-03-06T00:00:00.00Z");
 
     @Autowired
     private MediaScannerService mediaScannerService;
@@ -70,56 +66,6 @@ public class LeftController {
     @Autowired
     private InternetRadioService internetRadioService;
 
-
-    /**
-     * Note: This class intentionally does not implement org.springframework.web.servlet.mvc.LastModified
-     * as we don't need browser-side caching of left.html.  This method is only used by RESTController.
-     */
-    long getLastModified(HttpServletRequest request) throws Exception {
-        saveSelectedMusicFolder(request);
-
-        if (mediaScannerService.isScanning()) {
-            return -1L;
-        }
-
-        long lastModified = LAST_COMPATIBILITY_TIME.toEpochMilli();
-        String username = securityService.getCurrentUsername(request);
-        UserSettings userSettings = personalSettingsService.getUserSettings(username);
-
-        // When was settings last changed?
-        lastModified = Math.max(lastModified, settingsService.getSettingsChanged());
-
-        // When was music folder(s) on disk last changed?
-
-        List<MusicFolder> allMusicFolders = mediaFolderService.getMusicFoldersForUser(username);
-        MusicFolder selectedMusicFolder = allMusicFolders.stream()
-                .filter(f -> f.getId().equals(userSettings.getSelectedMusicFolderId()))
-                .findAny().orElse(null);
-        if (selectedMusicFolder != null) {
-            Path file = selectedMusicFolder.getPath();
-            lastModified = Math.max(lastModified, FileUtil.lastModified(file).toEpochMilli());
-        } else {
-            for (MusicFolder musicFolder : allMusicFolders) {
-                Path file = musicFolder.getPath();
-                lastModified = Math.max(lastModified, FileUtil.lastModified(file).toEpochMilli());
-            }
-        }
-
-        // When was music folder table last changed?
-        for (MusicFolder musicFolder : allMusicFolders) {
-            lastModified = Math.max(lastModified, musicFolder.getChanged().toEpochMilli());
-        }
-
-        // When was internet radio table last changed?
-        for (InternetRadio internetRadio : internetRadioService.getEnabledInternetRadios()) {
-            lastModified = Math.max(lastModified, internetRadio.getChanged().toEpochMilli());
-        }
-
-        // When was user settings last changed?
-        lastModified = Math.max(lastModified, userSettings.getChanged().toEpochMilli());
-
-        return lastModified;
-    }
 
     @GetMapping
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
