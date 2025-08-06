@@ -38,12 +38,20 @@ import java.lang.reflect.Method;
 })
 @EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
 @EnableConfigurationProperties({AirsonicHomeConfig.class})
-public class Application extends SpringBootServletInitializer implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+public class Application extends SpringBootServletInitializer
+        implements WebServerFactoryCustomizer<
+                ConfigurableServletWebServerFactory> {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
-    private static SpringApplicationBuilder doConfigure(SpringApplicationBuilder application) {
+    /**
+     * Configure the Spring application builder with necessary settings.
+     * @param application the Spring application builder to configure
+     * @return the configured application builder
+     */
+    private static SpringApplicationBuilder doConfigure(
+            final SpringApplicationBuilder application) {
         // Customize the application or call application.sources(...) to add sources
         // Since our example is itself a @Configuration class (via @SpringBootApplication)
         // we actually don't need to override this method.
@@ -51,12 +59,13 @@ public class Application extends SpringBootServletInitializer implements WebServ
     }
 
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+    protected SpringApplicationBuilder configure(
+            final SpringApplicationBuilder application) {
         return doConfigure(application);
     }
 
     @Override
-    public void customize(ConfigurableServletWebServerFactory container) {
+    public void customize(final ConfigurableServletWebServerFactory container) {
         LOG.trace("Servlet container is {}", container.getClass().getCanonicalName());
         // Yes, there is a good reason we do this.
         // We cannot count on the tomcat classes being on the classpath which will
@@ -83,7 +92,11 @@ public class Application extends SpringBootServletInitializer implements WebServ
         }
     }
 
-    public static void main(String[] args) {
+    /**
+     * Main entry point for the application.
+     * @param args command line arguments
+     */
+    public static void main(final String[] args) {
         SpringApplicationBuilder builder = new SpringApplicationBuilder();
         doConfigure(builder).run(args);
     }

@@ -8,6 +8,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class ThreadPoolConfig {
 
+    /**
+     * Creates a lazy-initialized thread pool for broadcast operations.
+     * @return configured thread pool executor
+     */
     @Bean(name = "BroadcastThreadPool")
     @Lazy
     public ThreadPoolTaskExecutor configThreadPool() {
@@ -20,6 +24,10 @@ public class ThreadPoolConfig {
         return threadPool;
     }
 
+    /**
+     * Creates a lazy-initialized thread pool for podcast download operations.
+     * @return configured thread pool executor
+     */
     @Bean(name = "PodcastDownloadThreadPool")
     @Lazy
     public ThreadPoolTaskExecutor podcastDownloadThreadPool() {
@@ -32,6 +40,10 @@ public class ThreadPoolConfig {
         return threadPool;
     }
 
+    /**
+     * Creates a lazy-initialized thread pool for podcast refresh operations.
+     * @return configured thread pool executor
+     */
     @Bean(name = "PodcastRefreshThreadPool")
     @Lazy
     public ThreadPoolTaskExecutor podcastRefreshThreadPool() {

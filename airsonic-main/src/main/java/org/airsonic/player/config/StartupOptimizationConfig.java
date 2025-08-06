@@ -9,9 +9,10 @@ import org.springframework.core.annotation.Order;
 
 /**
  * Configuration for optimizing Spring Boot startup performance.
- * 
- * This configuration ensures that critical components needed for basic application
- * functionality are loaded eagerly, while non-critical components are loaded lazily.
+ *
+ * This configuration ensures that critical components needed for basic
+ * application functionality are loaded eagerly, while non-critical
+ * components are loaded lazily.
  */
 @Configuration
 public class StartupOptimizationConfig {
@@ -30,21 +31,26 @@ public class StartupOptimizationConfig {
      * Component that manages which beans should be eagerly loaded
      * for proper application functionality.
      */
-    public static class EagerBeanPostProcessor implements org.springframework.beans.factory.config.BeanPostProcessor {
-        
-        private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(EagerBeanPostProcessor.class);
-        
+    public static class EagerBeanPostProcessor
+            implements org.springframework.beans.factory.config
+                    .BeanPostProcessor {
+
+        private static final org.slf4j.Logger LOG =
+                org.slf4j.LoggerFactory.getLogger(EagerBeanPostProcessor.class);
+
         @Override
-        public Object postProcessBeforeInitialization(Object bean, String beanName) {
+        public Object postProcessBeforeInitialization(final Object bean,
+                final String beanName) {
             // Log startup of critical components
             if (isCriticalComponent(beanName)) {
-                LOG.debug("Eagerly initializing critical component: {}", beanName);
+                LOG.debug("Eagerly initializing critical component: {}",
+                        beanName);
             }
             return bean;
         }
-        
-        private boolean isCriticalComponent(String beanName) {
-            return beanName.contains("Security") || 
+
+        private boolean isCriticalComponent(final String beanName) {
+            return beanName.contains("Security") ||
                    beanName.contains("DataSource") ||
                    beanName.contains("entityManagerFactory") ||
                    beanName.contains("transactionManager");
