@@ -6,7 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.actuate.autoconfigure.endpoint.jmx.JmxEndpointAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration;
+import org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
+import org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration;
+import org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration;
+import org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
+import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServletAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -20,7 +27,14 @@ import java.lang.reflect.Method;
 
 @SpringBootApplication(exclude = {
     JmxAutoConfiguration.class,
-    JmxEndpointAutoConfiguration.class
+    JmxEndpointAutoConfiguration.class,
+    MailSenderAutoConfiguration.class,
+    MailSenderValidatorAutoConfiguration.class,
+    WebSocketServletAutoConfiguration.class,
+    RepositoryRestMvcAutoConfiguration.class,
+    FreeMarkerAutoConfiguration.class,
+    GroovyTemplateAutoConfiguration.class,
+    MustacheAutoConfiguration.class
 })
 @EnableTransactionManagement(mode = AdviceMode.ASPECTJ)
 @EnableConfigurationProperties({AirsonicHomeConfig.class})

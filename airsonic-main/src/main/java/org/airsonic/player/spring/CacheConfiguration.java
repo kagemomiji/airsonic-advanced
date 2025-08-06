@@ -25,6 +25,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import javax.cache.Caching;
 import javax.cache.spi.CachingProvider;
@@ -34,6 +35,7 @@ import java.util.EnumSet;
 
 @Configuration
 @EnableCaching(proxyTargetClass = true, mode = AdviceMode.ASPECTJ) // AspectJ used so classes calling methods on self can benefit from the cache
+@Lazy // Make cache configuration lazy to speed up startup
 public class CacheConfiguration {
 
     public static final String USER_CACHE = "userCache";
