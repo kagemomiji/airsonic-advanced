@@ -64,7 +64,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: |
           mkdir -p airsonic-main/target/classes
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: build-metadata
           path: airsonic-main/target/classes/  
@@ -135,7 +135,7 @@ jobs:
     if: github.repository != github.event.pull_request.head.repo.full_name && contains(github.event.pull_request.labels.*.name, 'safe to test')
     steps:
       - name: Download digest
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           path: /tmp/digests
           pattern: docker-digest-*

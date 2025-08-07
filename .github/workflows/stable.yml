@@ -143,18 +143,18 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
       - name: Download digest
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: docker-digest-*
           path: /tmp/digests
           merge-multiple: true
       - name: Download war
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: airsonic.war
           path: /tmp/artifacts
       - name: Download checksums
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: artifacts-checksums.sha
           path: /tmp/artifacts
