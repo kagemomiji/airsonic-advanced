@@ -20,7 +20,7 @@ public class StartupOptimizationConfig {
      */
     @Bean
     @Order(1)
-    public EagerBeanPostProcessor eagerBeanPostProcessor() {
+    public static EagerBeanPostProcessor eagerBeanPostProcessor() {
         return new EagerBeanPostProcessor();
     }
 
