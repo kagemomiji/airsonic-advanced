@@ -36,7 +36,7 @@ jobs:
     - name: Build with Maven
       run: mvn package -DskipTests -B -P docker
     - name: Upload war file
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: airsonic-advanced
         path: airsonic-main/target/airsonic.war

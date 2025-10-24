@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-m2-
       - name: Build with Maven
         run: mvn verify -B -DskipTests=true -P docker
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: build-metadata
           path: airsonic-main/target/generated/build-metadata/build.properties 
@@ -147,7 +147,7 @@ jobs:
           digest="${{steps.build.outputs.digest}}"
           touch "/tmp/digests/${digest#sha256:}"
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker-digest-${{ steps.prep.outputs.PLATFORM_PAIR }}
           path: /tmp/digests/*
@@ -155,7 +155,7 @@ jobs:
           retention-days: 1
       - name: Upload war
         if: ${{matrix.cfg.jdk == 21 && matrix.cfg.platform == 'linux/amd64'}}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: airsonic.war
           path: |
@@ -164,7 +164,7 @@ jobs:
           retention-days: 1
       - name: Upload checksums
         if: ${{matrix.cfg.jdk == 21 && matrix.cfg.platform == 'linux/amd64'}}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: artifacts-checksums.sha
           path: |
