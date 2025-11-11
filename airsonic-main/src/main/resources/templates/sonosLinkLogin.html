@@ -17,17 +17,15 @@
 
             <img th:src="${themes?.get('logoImage') ?: 'icons/default_light/logo.png'}" alt=""/>
 
-            <div class="loginmessagetop" th:text="${model.loginMessage}"></div>
-
-            <input type="hidden" value="${model.linkCode}" name="linkCode"/>
+            <input type="hidden" th:value="${model.linkCode}" name="linkCode"/>
 
             <input required type="text" autofocus id="j_username" name="j_username" tabindex="1" th:placeholder="#{login.username}"/>
 
             <input required type="password" autocomplete="off"  name="j_password" tabindex="2" th:placeholder="#{login.password}" />
 
-            <input name="submit" type="submit" th:value="#{login.login}/>" tabindex="4"></td>
+            <input name="submit" type="submit" th:value="#{login.login}" tabindex="4"/>
 
-            <th:block th:unless="${#strings.empty(model.error)}">
+            <th:block th:if="${model['error']}">
                 <div class="loginmessagebottom">
                     <span class="warning" th:text="#{login.error}"></span>
                 </div>
