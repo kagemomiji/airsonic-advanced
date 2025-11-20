@@ -34,7 +34,7 @@ jobs:
         run: |
           platform="${{ matrix.cfg.platform }}"
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -141,7 +141,7 @@ jobs:
     needs: deploy
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Download digest
         uses: actions/download-artifact@v5
         with:
