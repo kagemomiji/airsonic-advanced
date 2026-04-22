@@ -7,6 +7,9 @@ Airsonic-CE
 ![](https://github.com/airsonic-ce/airsonic-ce/workflows/Edge%20Deploy%20CI%20(Maven)/badge.svg)
 ![](https://github.com/airsonic-ce/airsonic-ce/workflows/Stable%20Deploy%20CI%20(Maven)/badge.svg)
 
+> [!IMPORTANT]
+> Support for WAR distribution is planned to be dropped, see [#4](https://github.com/airsonic-ce/airsonic-ce/issues/4)
+
 What is Airsonic-CE?
 -----------------
 
