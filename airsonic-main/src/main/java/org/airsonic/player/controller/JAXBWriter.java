@@ -64,7 +64,7 @@ public class JAXBWriter {
     private final DatatypeFactory datatypeFactory;
     private static final String restProtocolVersion = parseRESTProtocolVersion();
 
-    private final String SERVER_TYPE = "Airsonic-Advanced";
+    private final String SERVER_TYPE = "Airsonic-CE";
 
     public JAXBWriter() {
         Map<String, Object> properties = Map.of(JAXBContext.JAXB_CONTEXT_FACTORY, "org.eclipse.persistence.jaxb.JAXBContextFactory");

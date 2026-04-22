@@ -5,7 +5,7 @@ on:
     branches: [ stable/** ]
 
 env:
-  REGISTRY_IMAGE: ghcr.io/kagemomiji/airsonic-advanced
+  REGISTRY_IMAGE: ghcr.io/airsonic-ce/airsonic-ce
 
 jobs:
   deploy:
@@ -203,7 +203,7 @@ jobs:
           prerelease: false
           generate_release_notes: true
           body: |
-            List of issues addressed: https://github.com/kagemomiji/airsonic-advanced/issues?q=milestone%3A${{ env.RELEASE_TAG }}
+            List of issues addressed: https://github.com/airsonic-ce/airsonic-ce/issues?q=milestone%3A${{ env.RELEASE_TAG }}
           files: |
             /tmp/artifacts/airsonic.war
             /tmp/artifacts/artifacts-checksums.sha

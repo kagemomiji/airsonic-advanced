@@ -207,7 +207,7 @@ public class UPnPService {
         // TODO: DLNACaps
         DLNADoc[] dlnaDocs = new DLNADoc[] { new DLNADoc("DMS", DLNADoc.Version.V1_5) };
         URI modelURI = URI.create("https://airsonic.github.io/");
-        URI manufacturerURI = URI.create("https://github.com/kagemomiji/airsonic-advanced");
+        URI manufacturerURI = URI.create("https://github.com/airsonic-ce/airsonic-ce");
         URI presentaionURI = URI.create(settingsService.getDlnaBaseLANURL());
         ManufacturerDetails manufacturerDetails = new ManufacturerDetails(serverName, modelURI);
         ModelDetails modelDetails = new ModelDetails(serverName, null, versionService.getLocalVersion().toString(),

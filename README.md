@@ -1,40 +1,39 @@
 <!--
 # README.md
-# kagemomiji/airsonic-advanced
+# airsonic-ce/airsonic-ce
 -->
-Airsonic-Advanced
+Airsonic-CE
 =================
-![](https://github.com/kagemomiji/airsonic-advanced/workflows/Edge%20Deploy%20CI%20(Maven)/badge.svg)
-![](https://github.com/kagemomiji/airsonic-advanced/workflows/Stable%20Deploy%20CI%20(Maven)/badge.svg)
+![](https://github.com/airsonic-ce/airsonic-ce/workflows/Edge%20Deploy%20CI%20(Maven)/badge.svg)
+![](https://github.com/airsonic-ce/airsonic-ce/workflows/Stable%20Deploy%20CI%20(Maven)/badge.svg)
 
-What is kagemomiji/airsonic-advanced?
-------------------------------------
-The main objective of this repository is to keep airsonic-advanced safe for use.
-I don't have much time to add features right now as I am adding tests to prevent deggregation and upgrade dependent libraries.
-Therefore, PRs for additional features are welcome!
-
-What is Airsonic-Advanced?
---------------------------
-Airsonic-Advanced is a more modern implementation of the Airsonic fork with several key performance and feature enhancements. It adds and supersedes several features in Airsonic.
-
-What is Airsonic?
+What is Airsonic-CE?
 -----------------
 
-Airsonic is a free, web-based media streamer, providing ubiquitous access to your music. Use it to share your music with friends, or to listen to your own music while at work. You can stream to multiple players simultaneously, for instance to one player in your kitchen and another in your living room.
+Airsonic-CE is a free, web-based media streamer, providing ubiquitous access to your music. Use it to share your music with friends, or to listen to your own music while at work. You can stream to multiple players simultaneously, for instance to one player in your kitchen and another in your living room.
 
-Airsonic is designed to handle very large music collections (hundreds of gigabytes). Although optimized for MP3 streaming, it works for any audio or video format that can stream over HTTP, for instance AAC and OGG. By using transcoder plug-ins, Airsonic supports on-the-fly conversion and streaming of virtually any audio format, including WMA, FLAC, APE, Musepack, WavPack and Shorten.
+Airsonic-CE is designed to handle very large music collections (hundreds of gigabytes). Although optimized for MP3 streaming, it works for any audio or video format that can stream over HTTP, for instance AAC and OGG. By using transcoder plug-ins, Airsonic-CE supports on-the-fly conversion and streaming of virtually any audio format, including WMA, FLAC, APE, Musepack, WavPack and Shorten.
 
-If you have constrained bandwidth, you may set an upper limit for the bitrate of the music streams. Airsonic will then automatically resample the music to a suitable bitrate.
+If you have constrained bandwidth, you may set an upper limit for the bitrate of the music streams. Airsonic-CE will then automatically resample the music to a suitable bitrate.
 
-In addition to being a streaming media server, Airsonic works very well as a local jukebox. The intuitive web interface, as well as search and index facilities, are optimized for efficient browsing through large media libraries. Airsonic also comes with an integrated Podcast receiver, with many of the same features as you find in iTunes.
+In addition to being a streaming media server, Airsonic-CE works very well as a local jukebox. The intuitive web interface, as well as search and index facilities, are optimized for efficient browsing through large media libraries. Airsonic-CE also comes with an integrated Podcast receiver, with many of the same features as you find in iTunes.
 
-Written in Java, Airsonic runs on most platforms, including Windows, Mac, Linux and Unix variants.
+Written in Java, Airsonic-CE runs on most platforms, including Windows, Mac, Linux and Unix variants.
 
 ![Screenshot](contrib/assets/screenshot.png)
 
+What about other Airsonic Forks?
+--------------------------------
+Airsonic-CE is (unfortunately) the next fork of Airsonic originating from kagemomiji/airsonic-advanced as the maintainer there was unavailable for a longer time period and the development stopped. See [History](#history) for more details.
+
+The general objective of Airsonic-CE is to keep Airsonic / Airsonic-Advanced alive and safe to use.
+
+Over some time, a lot of forks of Airsonic and Airsonic-Advanced came up and later have been left behind. Airsonic-CE tries to make this better by hopefully welcoming more developers that are willing to support this project. Therefore, the "CE" in Airsonic-CE stands for "Community Edition".
+
+
 Feature Enhancements:
 ---------------------
-The following is an incomplete list of features that are enhanced from Airsonic:
+The following is an incomplete list of features that are enhanced from Airsonic-CE:
 - More modern base frameworks and libraries
   - Spring Boot 2.x (instead of 1.x), Spring Framework 5.x (instead of 4.x). Plus all the additional dependency upgrades due to the base libaries being upgraded (including EhCache, upgraded SQL connectors etc.)
 - Security
@@ -84,8 +83,8 @@ The following is an incomplete list of features that are enhanced from Airsonic:
   - Ability to pass properties via environment or system variables. You can but do not need to modify `airsonic.properties` to change preferences
   - Ability to use custom URLs to scrobble on ListenBrainz servers
   - Ability to use Repeat-One in play queues in web-clients
-  - Sonos support: [read documentation](https://github.com/kagemomiji/airsonic-advanced/blob/master/SONOS.md)
-  - Chromecast support: [read details](https://github.com/kagemomiji/airsonic-advanced/blob/master/CHROMECAST.md)
+  - Sonos support: [read documentation](https://github.com/airsonic-ce/airsonic-ce/blob/master/SONOS.md)
+  - Chromecast support: [read details](https://github.com/airsonic-ce/airsonic-ce/blob/master/CHROMECAST.md)
   - Ability to upload to specified folders (via `UploadsFolder` property/parameter)
   - Ability to upload multiple files simultaneously
   - Ability to upload and extract more archive formats:
@@ -117,35 +116,35 @@ The following is an incomplete list of features that are enhanced from Airsonic:
 - Stepbacks
   - The Java Jukebox has been removed, due to the third-party library not being kept up to date with modern JVMs. See [PR #636](https://github.com/airsonic-advanced/airsonic-advanced/pull/636).
 
-The complete list of PRs that were used to enhance Airsonic can be seen on the PRs page. At some point an automatic changelog generator will be added to keep track.
+The complete list of PRs that were used to enhance Airsonic-CE can be seen on the PRs page. At some point an automatic changelog generator will be added to keep track.
 
-Airsonic-Advanced will occasionally backport features introduced in the base Airsonic fork, but is generally much more modern and bleeding edge than Airsonic.
+Airsonic-CE will occasionally backport features introduced in the base Airsonic fork, but is generally much more modern and bleeding edge than Airsonic.
 
 Usage
 -----
-Airsonic-Advanced v10.6.x series (and its snapshots) are intercompatible with vanilla Airsonic 10.6.x series. This may not necessarily be the case with 11.x versions.
+Airsonic-CE v10.6.x series (and its snapshots) are intercompatible with vanilla Airsonic 10.6.x series. This may not necessarily be the case with 11.x versions.
 
-Also note that Airsonic-Advanced 11.x (and its snapshots) are *breaking* (non-backwards-compatible) version changes. You will not be able to revert back to 10.6.x after upgrading (the system _does_ create a backup of the DB in case such revert is necessary, but it must be manually restored).
+Also note that Airsonic-CE 11.x (and its snapshots) are *breaking* (non-backwards-compatible) version changes. You will not be able to revert back to 10.6.x after upgrading (the system _does_ create a backup of the DB in case such revert is necessary, but it must be manually restored).
 
-Airsonic-Advanced snapshots are generally pretty stable and recommended for use over the stable releases (which may be extremely outdated).
+Airsonic-CE snapshots are generally pretty stable and recommended for use over the stable releases (which may be extremely outdated).
 
 ### Stand-alone binaries
-Airsonic-Advanced can be downloaded from
-[GitHub](https://github.com/kagemomiji/airsonic-advanced/releases).
+Airsonic-CE can be downloaded from
+[GitHub](https://github.com/airsonic-ce/airsonic-ce/releases).
 
-The release signature may be verified using the [public key](https://github.com/kagemomiji/airsonic-advanced/blob/master/releases_public_key.asc).
+The release signature may be verified using the [public key](https://github.com/airsonic-ce/airsonic-ce/blob/master/releases_public_key.asc).
 
 You need a _minimum_ Java Runtime Environment (JRE) of 1.8 for 10.6.x series, and 11 for 11.x onwards (including snapshots).
 - For 11.x releases and onwards -> Java 17
 
-Airsonic-Advanced is run similarly to (and in lieu of) vanilla Airsonic.
+Airsonic-CE is run similarly to (and in lieu of) vanilla Airsonic.
 
 Read the [compatibility notes](#compatibility-notes).
 
 ### Docker
-[GHCR](https://ghcr.io/kagemomiji/airsonic-advanced). Docker releases are recently multiplatform, which means ARMv7 and ARM64 are also released to Dockerhub. However, automated testing for those archs is not currently done in the CI/CD pipeline (only Linux platform is tested).
+[GHCR](https://ghcr.io/airsonic-ce/airsonic-ce). Docker releases are recently multiplatform, which means ARMv7 and ARM64 are also released to Dockerhub. However, automated testing for those archs is not currently done in the CI/CD pipeline (only Linux platform is tested).
 
-Please note that for Docker images, the volume mounting points have changed and are different from Airsonic. Airsonic mount points are at `/airsonic/*` inside the container. Airsonic-Advanced tries to use the same volume locations as the default war image at `/var/*` in order to remain consistent if people want to switch between the containers and non-containers.
+Please note that for Docker images, the volume mounting points have changed and are different from Airsonic. Airsonic mount points are at `/airsonic/*` inside the container. Airsonic-CE tries to use the same volume locations as the default war image at `/var/*` in order to remain consistent if people want to switch between the containers and non-containers.
   - `Music:/airsonic/music` -> `Music:/var/music`
   - `Podcasts:/airsonic/podcast` -> `Podcasts:/var/podcast`
   - `Playlists:/airsonic/playlists` -> `Playlists:/var/playlists`
@@ -158,7 +157,7 @@ Also note that the Docker image will by default run as user root (0), group root
 Vanilla Airsonic can be downloaded from
 [GitHub](https://github.com/airsonic/airsonic/releases).
 
-Please use the [Airsonic documentation](https://airsonic.github.io/docs/) for instructions on running Airsonic. For the most part (currently) Airsonic-Advanced shares similar running instructions unless stated otherwise. Notable exceptions are available as comments or resolutions in the Issues page (please search).
+Please use the [Airsonic documentation](https://airsonic.github.io/docs/) for instructions on running Airsonic. For the most part (currently) Airsonic-CE shares similar running instructions unless stated otherwise. Notable exceptions are available as comments or resolutions in the Issues page (please search).
 
 ### Docker Compose
 
@@ -180,17 +179,17 @@ See the [Configuration](./docs/configures/README.md)
 
 Compatibility Notes:
 ------
-The following properties are new in Airsonic-Advanced:
+The following properties are new in Airsonic-CE:
   - `MediaScannerParallelism(<= 11.1.2)`: (default: number of available processors + 1) The parallelism to use when scanning media
   - `AIRSONIC_SCAN_PARALLELISM(> 11.1.2)`: (default: number of available processors + 1) The parallelism to use when scanning media
   - `ClearFullScanSettingAfterScan`: (default: false) Whether to clear FullScan setting after the next SUCCESSFUL scan (useful for doing full scan once and then reverting to default scan)
 
-The following property names are different between Airsonic and Airsonic-Advanced:
+The following property names are different between Airsonic and Airsonic-CE:
   - `UPNP_PORT` -> `UPnpPort`
   - `server.context-path` -> `server.servlet.context-path` (Airsonic will use the latter from 11.0 onwards)
   - `IgnoreFileTimestamps` -> `FullScan`
 
-Note that Airsonic-Advanced communicates with its Web UI via websockets. If you're behind a proxy, you need to enable websockets and allow UPGRADE http requests through the proxy. A sample configuration is posted here: [nginx sample](https://github.com/airsonic-advanced/airsonic-advanced/issues/145).
+Note that Airsonic-CE communicates with its Web UI via websockets. If you're behind a proxy, you need to enable websockets and allow UPGRADE http requests through the proxy. A sample configuration is posted here: [nginx sample](https://github.com/airsonic-advanced/airsonic-advanced/issues/145).
 
 Additionally, if placed behind a proxy, the Airsonic server needs to forward headers, for which the following property is necessary (either in `/path/to/airsonic-data/airsonic.properties` or as a jvm argument):
   - After and including *Edge Release 11.0.0-SNAPSHOT.20210117214044*: `server.forward-headers-strategy=native`
@@ -242,14 +241,16 @@ based on the Subsonic codebase that is free, open source, and community driven.
 
 Around November 2019, Airsonic-Advanced was forked off the base Airsonic fork due to differences in pace and review of development. Several key features of the framework were outdated, and attempts to upgrade them occasionally took upto a year. Airsonic-Advanced tries a modern implementation and bleeding edge approach to development, and is thus usually ahead of the base fork in dependencies and features.
 
-December 2022, this repository forked from Airsonic-Advanced.
+December 2022, @kagemomiji forked from Airsonic-Advanced.
+
+As @kagemomiji was unavailable for a longer time period, development stopped and in the end Airsonic-CE was forked from `kagemomiji/airsonic-advanced`.
 
 Pull Requests are always welcome. All Pull Requests are reviewed before being merged to ensure we continue to meet our goals.
 
 License
 -------
 
-Airsonic-Advanced and Airsonic are free software and licensed under the [GNU General Public License version 3](http://www.gnu.org/copyleft/gpl.html). The code in this repository (and associated binaries) are free of any "license key" or other restrictions. If you wish to thank the maintainer of this repository, please consider a donation to the [Electronic Frontier Foundation](https://supporters.eff.org/donate).
+Airsonic-CE, Airsonic-Advanced and Airsonic are free software and licensed under the [GNU General Public License version 3](http://www.gnu.org/copyleft/gpl.html). The code in this repository (and associated binaries) are free of any "license key" or other restrictions. If you wish to thank the maintainer of this repository, please consider a donation to the [Electronic Frontier Foundation](https://supporters.eff.org/donate).
 
 The [Subsonic source code](https://github.com/airsonic/subsonic-svn) was released under the GPLv3 through version 6.0-beta1. Beginning with 6.0-beta2, source is no longer provided. Binaries of Subsonic are only available under a commercial license. There is a [Subsonic Premium](http://www.subsonic.org/pages/premium.jsp) service which adds functionality not available in Airsonic. Subsonic also offers RPM, Deb, Exe, and other pre-built packages that Airsonic [currently does not](https://github.com/airsonic/airsonic/issues/65).
 
@@ -263,6 +264,6 @@ The cover art functionality supporting multiple image file formats is powered by
 
 Community
 ---------
-Bugs/feature requests/discussions pertaining to kagemomiji/airsonic-advanced may be raised as issues within GitHub on the Airsonic-Advanced project page.
+Bugs/feature requests/discussions pertaining to airsonic-ce/airsonic-ce may be raised as issues within GitHub on the Airsonic-CE project page.
 
 GitHub Discussions is prepared for community discussion, questions, etc:

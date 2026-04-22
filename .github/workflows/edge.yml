@@ -13,7 +13,7 @@ on:
 env:
   DEFAULT_MUSIC_FOLDER: /tmp/music
   EXCLUDED_TEST_GROUPS:
-  REGISTRY_IMAGE: ghcr.io/kagemomiji/airsonic-advanced
+  REGISTRY_IMAGE: ghcr.io/airsonic-ce/airsonic-ce
 
 jobs:
   version:

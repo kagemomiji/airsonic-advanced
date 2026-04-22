@@ -17,7 +17,7 @@
     <tr th:with="unknownLabel=#{common.unknown}">
         <td class="ruleTableHeader" th:text="#{help.version.title}"></td>
         <td class="ruleTableCell"><span th:text="|${#strings.isEmpty(model.localVersion) ? unknownLabel : model.localVersion} &ndash;
-        ${#strings.isEmpty(model.buildDate) ? unknownLabel : #dates.format(model.buildDate)} [Commit:|"></span> <a th:href="|https://github.com/kagemomiji/airsonic-advanced/commit/${model.buildNumber}|" target="_blank" th:text="${model.buildNumber}"></a>]</td>
+        ${#strings.isEmpty(model.buildDate) ? unknownLabel : #dates.format(model.buildDate)} [Commit:|"></span> <a th:href="|https://github.com/airsonic-ce/airsonic-ce/commit/${model.buildNumber}|" target="_blank" th:text="${model.buildNumber}"></a>]</td>
     </tr>
     <tr>
         <td class="ruleTableHeader" th:text="#{help.server.title}"></td>

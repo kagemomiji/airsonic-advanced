@@ -38,7 +38,7 @@ jobs:
     - name: Upload war file
       uses: actions/upload-artifact@v4
       with:
-        name: airsonic-advanced
+        name: airsonic-ce
         path: airsonic-main/target/airsonic.war
         retention-days: 30
         overwrite: true

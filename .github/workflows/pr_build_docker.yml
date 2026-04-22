@@ -13,7 +13,7 @@ permissions:
   packages: write
 
 env: 
-  REGISTRY_IMAGE: ghcr.io/kagemomiji/airsonic-advanced
+  REGISTRY_IMAGE: ghcr.io/airsonic-ce/airsonic-ce
 
 jobs:
   version:

@@ -28,7 +28,7 @@
         <snakeyaml.version>2.4</snakeyaml.version>
         <lucene.version>10.2.2</lucene.version>
         <logback.version>1.5.18</logback.version>
-        <docker.container.repo>ghcr.io/kagemomiji/airsonic-advanced</docker.container.repo>        
+        <docker.container.repo>ghcr.io/airsonic-ce/airsonic-ce</docker.container.repo>        
     </properties>
 
 
@@ -56,9 +56,9 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:git:git://github.com/kagemomiji/airsonic-advanced.git</connection>
-        <developerConnection>scm:git:git@github.com:kagemomiji/airsonic-advanced.git</developerConnection>
-        <url>https://github.com/kagemomiji/airsonic-advanced.git</url>
+        <connection>scm:git:git://github.com/airsonic-ce/airsonic-ce.git</connection>
+        <developerConnection>scm:git:git@github.com/airsonic-ce/airsonic-ce.git</developerConnection>
+        <url>https://github.com/airsonic-ce/airsonic-ce.git</url>
     </scm>
 
     <modules>

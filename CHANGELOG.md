@@ -1,6 +1,6 @@
 <!--
 # CHANGELOG.md
-# kagemomiji/airsonic-advanced
+# airsonic-ce/airsonic-ce
 # -->
 
 ## v11.1.4 - 19 Sep 2024

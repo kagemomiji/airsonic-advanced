@@ -201,7 +201,7 @@ public class VersionService {
         }
     }
 
-    private static final String VERSION_URL = "https://api.github.com/repos/kagemomiji/airsonic-advanced/releases";
+    private static final String VERSION_URL = "https://api.github.com/repos/airsonic-ce/airsonic-ce/releases";
 
     private static Function<GitHubRelease, Version> releaseToVersionMapper = r ->
             new Version(
