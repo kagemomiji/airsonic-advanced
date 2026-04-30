@@ -4,6 +4,10 @@ on:
   push:
     branches: [ stable/** ]
 
+permissions:
+  contents: write
+  packages: write
+
 env:
   REGISTRY_IMAGE: ghcr.io/airsonic-ce/airsonic-ce
 

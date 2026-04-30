@@ -6,6 +6,10 @@ on:
     types: 
       - labeled
 
+permissions:
+  contents: read
+  packages: write
+
 env: 
   REGISTRY_IMAGE: ghcr.io/airsonic-ce/airsonic-ce
 

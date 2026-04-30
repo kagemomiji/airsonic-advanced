@@ -9,6 +9,9 @@ on:
       - ".github/**" 
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
 
 env:
   DEFAULT_MUSIC_FOLDER: /tmp/music
