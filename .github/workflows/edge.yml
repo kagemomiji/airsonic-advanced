@@ -242,13 +242,10 @@ jobs:
           files: |
             /tmp/artifacts/airsonic.war
             /tmp/artifacts/artifacts-checksums.sha
-      - name: Publish Draft Release
-        uses: softprops/action-gh-release@v2
+      - name: Publish the Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ needs.deploy.outputs.tag }}
-        with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: Edge Release ${{ env.RELEASE_TAG }}
-          draft: false
-          prerelease: true
+        run: |
+          # Can't use softprops/action-gh-release here
+          gh release edit "$RELEASE_TAG" --draft=false
