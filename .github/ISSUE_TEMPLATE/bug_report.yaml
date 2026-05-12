@@ -90,8 +90,8 @@ body:
   - type: textarea
     id: configuration
     attributes:
-      label: Configuration paramter
-      description: Pleasse copy and paset your configuration. **Don't write your secret parameter!** 
+      label: Configuration parameter
+      description: Please copy and paste your configuration. **Don't write your secret parameter!** 
     validations:
       required: true
       
@@ -106,12 +106,12 @@ body:
     id: client
     attributes:
       label: client detail
-      description: What browsers or applicationis are you seeing the problem on?
+      description: What browsers or applications are you seeing the problem on?
   - type: dropdown
     id: language
     attributes:
       label: language
-      description: which langauge/internationalization is in use
+      description: which language/internationalization is in use
       multiple: false
       options:
         - "English"
