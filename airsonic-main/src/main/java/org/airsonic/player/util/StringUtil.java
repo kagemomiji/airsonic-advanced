@@ -24,6 +24,8 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -42,6 +44,8 @@ import java.util.regex.Pattern;
  * @author Sindre Mehus
  */
 public final class StringUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StringUtil.class);
 
     public static final String ENCODING_UTF8 = "UTF-8";
 
@@ -262,7 +266,38 @@ public final class StringUtil {
         while (elements.size() < 3) {
             elements.add("");
         }
-        return new Locale(elements.get(0), elements.get(1), elements.get(2));
+
+        String lang = elements.get(0);
+        String region = elements.get(1);
+        String variant = elements.get(2);
+
+        try {
+            java.util.Locale.Builder builder = new java.util.Locale.Builder();
+            if (lang != null && !lang.isEmpty()) {
+                builder.setLanguage(lang);
+            }
+            if (region != null && !region.isEmpty()) {
+                builder.setRegion(region);
+            }
+            if (variant != null && !variant.isEmpty()) {
+                builder.setVariant(variant);
+            }
+            return builder.build();
+        } catch (java.util.IllformedLocaleException x) {
+            // Locale.Builder is stricter (BCP47). Fall back to the legacy constructor
+            // to preserve historical locales like "en_US_WIN".
+            // Log and suggest a BCP47 tag (drop variant in suggestion).
+            String bcp47 = (lang == null || lang.isEmpty()) ? "" : lang + (region != null && !region.isEmpty() ? "-" + region : "");
+            LOG.warn(
+                "Failed to parse locale '{}' with Locale.Builder: {}. " +
+                "Falling back to legacy Locale(lang,country,variant). Consider using BCP47 tag '{}'.",
+                s,
+                x.getMessage(),
+                bcp47
+            );
+            Locale legacy = new Locale(lang == null ? "" : lang, region == null ? "" : region, variant == null ? "" : variant);
+            return legacy;
+        }
     }
 
     /**

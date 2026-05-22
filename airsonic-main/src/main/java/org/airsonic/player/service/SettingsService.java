@@ -1137,7 +1137,17 @@ public class SettingsService {
         String country = getProperty(KEY_LOCALE_COUNTRY, DEFAULT_LOCALE_COUNTRY);
         String variant = getProperty(KEY_LOCALE_VARIANT, DEFAULT_LOCALE_VARIANT);
 
-        return new Locale(language, country, variant);
+        java.util.Locale.Builder builder = new java.util.Locale.Builder();
+        if (language != null && !language.isEmpty()) {
+            builder.setLanguage(language);
+        }
+        if (country != null && !country.isEmpty()) {
+            builder.setRegion(country);
+        }
+        if (variant != null && !variant.isEmpty()) {
+            builder.setVariant(variant);
+        }
+        return builder.build();
     }
 
     /**
