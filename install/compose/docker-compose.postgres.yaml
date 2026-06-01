@@ -15,7 +15,7 @@ services:
   airsonic:
     depends_on:
       - postgres
-    image: ghcr.io/kagemomiji/airsonic-advanced
+    image: ghcr.io/airsonic-ce/airsonic-ce
     environment:
       - PUID=1000
       - PGID=1000

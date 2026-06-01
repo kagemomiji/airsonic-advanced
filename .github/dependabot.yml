@@ -8,8 +8,16 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: 'Europe/Berlin'
+    open-pull-requests-limit: 5
   - package-ecosystem: "maven"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+      timezone: 'Europe/Berlin'
+    open-pull-requests-limit: 5

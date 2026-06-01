@@ -9,11 +9,14 @@ on:
       - ".github/**" 
   workflow_dispatch:
 
+permissions:
+  contents: write
+  packages: write
 
 env:
   DEFAULT_MUSIC_FOLDER: /tmp/music
   EXCLUDED_TEST_GROUPS:
-  REGISTRY_IMAGE: ghcr.io/kagemomiji/airsonic-advanced
+  REGISTRY_IMAGE: ghcr.io/airsonic-ce/airsonic-ce
 
 jobs:
   version:
@@ -225,8 +228,7 @@ jobs:
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:edge-${{ env.RELEASE_TAG }}
 
-      - name: Deploy to GitHub Release
-        id: create_release
+      - name: Create GitHub draft Release with assets
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -234,9 +236,16 @@ jobs:
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Edge Release ${{ env.RELEASE_TAG }}
-          draft: false
+          draft: true
           prerelease: true
           generate_release_notes: true
           files: |
             /tmp/artifacts/airsonic.war
             /tmp/artifacts/artifacts-checksums.sha
+      - name: Publish the Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.deploy.outputs.tag }}
+        run: |
+          # Can't use softprops/action-gh-release here
+          gh release edit "$RELEASE_TAG" --draft=false

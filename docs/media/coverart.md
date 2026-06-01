@@ -1,6 +1,6 @@
 # Cover Art/ Artist Image
 
-Airsonic-Advanced supports cover art and artist image for your music.
+Airsonic-CE supports cover art and artist image for your music.
 
 ## Configuration
 

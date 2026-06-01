@@ -16,8 +16,8 @@ RUN mv WEB-INF/classes/liquibase cliquibase
 
 FROM eclipse-temurin:${IMAGE_JAVA_VERSION}-jre-jammy
 
-LABEL description="Airsonic-Advanced is a free, web-based media streamer, providing ubiquitous access to your music." \
-      url="https://github.com/kagemomiji/airsonic-advanced"
+LABEL description="Airsonic-CE is a free, web-based media streamer, providing ubiquitous access to your music." \
+      url="https://github.com/airsonic-ce/airsonic-ce"
 
 ENV AIRSONIC_PORT=4040 AIRSONIC_DIR=/var CONTEXT_PATH=/ UPNP_PORT=4041 PUID=0 PGID=0
 

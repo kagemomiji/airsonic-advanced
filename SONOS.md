@@ -90,7 +90,7 @@ An anonymous user is not able to browse through music because they shouldn't by 
 
 Thus, they are able to browse public stuff (like, for instance, if you make your playlist public, they should be able to see it), but have no rights to see non-public stuff.
 
-If you'd like to be able to browse all your non-public music, either use one of your existing accounts or create a new user account in airsonic-advanced for the explicit purpose of linking with sonos (like an account named "sonos").
+If you'd like to be able to browse all your non-public music, either use one of your existing accounts or create a new user account in airsonic-ce for the explicit purpose of linking with sonos (like an account named "sonos").
 
 ### Other issues
 Check the status of your link in Settings->Sonos. Check logs for exceptions.
