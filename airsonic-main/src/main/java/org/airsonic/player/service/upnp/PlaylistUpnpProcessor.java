@@ -23,9 +23,9 @@ package org.airsonic.player.service.upnp;
 import org.airsonic.player.domain.MediaFile;
 import org.airsonic.player.domain.Playlist;
 import org.airsonic.player.service.PlaylistService;
-import org.fourthline.cling.support.model.DIDLContent;
-import org.fourthline.cling.support.model.container.Container;
-import org.fourthline.cling.support.model.container.PlaylistContainer;
+import org.jupnp.support.model.DIDLContent;
+import org.jupnp.support.model.container.Container;
+import org.jupnp.support.model.container.PlaylistContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

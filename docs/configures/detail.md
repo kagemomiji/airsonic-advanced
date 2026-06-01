@@ -74,7 +74,7 @@ This is only used when initializing the database for the first time.
 
 ## airsonic.cue.enabled
 
-If enabled, airsonic-advanced will look for cue sheets in the same directory as the audio file and automatically split the audio file into tracks.
+If enabled, Airsonic-CE will look for cue sheets in the same directory as the audio file and automatically split the audio file into tracks.
 Configuration by Java options, environment variables are working as default value.
 
 > **Note**  
@@ -92,7 +92,7 @@ Configuration by Java options, environment variables are working as default valu
 
 ## airsonic.cue.hide-indexed-files
 
-If enabled, airsonic-advanced will hide the original audio file when cue sheet support is enabled.  
+If enabled, Airsonic-CE will hide the original audio file when cue sheet support is enabled.  
 Configuration by Java options, environment variables are working as default value.
 
 | item | description |

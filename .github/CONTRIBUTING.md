@@ -1,11 +1,11 @@
 Guidelines for Contributing
 ---------------------------
 
-kagemomiji/airsonic-advanced development is a community project, and contributions are welcomed. Here are a few guidelines you should follow before submitting:
+airsonic-ce/airsonic-ce development is a community project, and contributions are welcomed. Here are a few guidelines you should follow before submitting:
 
-  1.  **License Acceptance** All contributions must be licensed as [GNU GPLv3](https://github.com/kagemomiji/airsonic-advanced/blob/main/LICENSE.txt) to be accepted. Use [`git commit --signoff`](https://jk.gs/git-commit.html) to acknowledge this.
+  1.  **License Acceptance** All contributions must be licensed as [GNU GPLv3](https://github.com/airsonic-ce/airsonic-ce/blob/main/LICENSE.txt) to be accepted. Use [`git commit --signoff`](https://jk.gs/git-commit.html) to acknowledge this.
   2.  **No Breakage** New features or changes to existing ones must not degrade the user experience. This means do not introduce bugs, remove functionality, or make large changes to existing themes/UI without prior discussion in an Issue.
   3.  **Coding standards** Language best-practices should be followed, comment generously, and avoid "clever" algorithms. Refactoring existing messes is great, but watch out for breakage.
-  4.  **Be bold!** Without contributions, this project will vanish. If you just want to help out, try [submiting a patch](https://github.com/kagemomiji/airsonic-advanced/issues?q=is%3Aissue+is%3Aopen+label%3Apatches-welcome) for an open Issue.
-  5.  **Stay relevant** Issues or commentary that is off-topic or tangential to kagemomiji/airsonic-advanced development is subject to moderation. Questions should be focused on improving documentation to solve a problem. Visit [GitHub Discussions](https://github.com/kagemomiji/airsonic-advanced/discussions)
+  4.  **Be bold!** Without contributions, this project will vanish. If you just want to help out, try [submiting a patch](https://github.com/airsonic-ce/airsonic-ce/issues?q=is%3Aissue+is%3Aopen+label%3Apatches-welcome) for an open Issue.
+  5.  **Stay relevant** Issues or commentary that is off-topic or tangential to airsonic-ce/airsonic-ce development is subject to moderation. Questions should be focused on improving documentation to solve a problem. Visit [GitHub Discussions](https://github.com/airsonic-ce/airsonic-ce/discussions)
   

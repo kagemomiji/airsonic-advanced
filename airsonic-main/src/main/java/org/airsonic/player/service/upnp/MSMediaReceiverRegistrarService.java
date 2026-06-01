@@ -1,6 +1,6 @@
 package org.airsonic.player.service.upnp;
 
-import org.fourthline.cling.support.xmicrosoft.AbstractMediaReceiverRegistrarService;
+import org.jupnp.support.xmicrosoft.AbstractMediaReceiverRegistrarService;
 
 /**
  * @author Sindre Mehus

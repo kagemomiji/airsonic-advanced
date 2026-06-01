@@ -1,6 +1,6 @@
 # Configures
 
-Airsonic-Advanced has a number of configuration options.
+Airsonic-CE has a number of configuration options.
 You can configure the default options using `Java options` and `environment variables` on the first launch. 
 Additionally, you can modify options by editing the configuration file `airsonic.properties` or through the `web interface`.
 

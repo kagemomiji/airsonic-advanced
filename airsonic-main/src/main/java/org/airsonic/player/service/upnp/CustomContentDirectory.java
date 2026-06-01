@@ -20,12 +20,12 @@
  */
 package org.airsonic.player.service.upnp;
 
-import org.fourthline.cling.support.contentdirectory.AbstractContentDirectoryService;
-import org.fourthline.cling.support.contentdirectory.ContentDirectoryException;
-import org.fourthline.cling.support.contentdirectory.DIDLParser;
-import org.fourthline.cling.support.model.BrowseResult;
-import org.fourthline.cling.support.model.DIDLContent;
-import org.fourthline.cling.support.model.SortCriterion;
+import org.jupnp.support.contentdirectory.AbstractContentDirectoryService;
+import org.jupnp.support.contentdirectory.ContentDirectoryException;
+import org.jupnp.support.contentdirectory.DIDLParser;
+import org.jupnp.support.model.BrowseResult;
+import org.jupnp.support.model.DIDLContent;
+import org.jupnp.support.model.SortCriterion;
 
 import java.util.Arrays;
 import java.util.Collections;

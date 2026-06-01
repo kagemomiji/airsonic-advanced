@@ -2,9 +2,9 @@ version: "3"
 
 services:
 
-  airsonic-advanced:
-    image: ghcr.io/kagemomiji/airsonic-advanced
-    container_name: airsonic-advanced
+  airsonic-ce:
+    image: ghcr.io/airsonic-ce/airsonic-ce
+    container_name: airsonic-ce
     environment:
       - PUID=1000
       - PGID=1000

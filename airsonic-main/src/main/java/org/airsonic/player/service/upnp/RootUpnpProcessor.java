@@ -21,10 +21,10 @@
 package org.airsonic.player.service.upnp;
 
 import org.airsonic.player.service.search.IndexManager;
-import org.fourthline.cling.support.model.DIDLContent;
-import org.fourthline.cling.support.model.WriteStatus;
-import org.fourthline.cling.support.model.container.Container;
-import org.fourthline.cling.support.model.container.StorageFolder;
+import org.jupnp.support.model.DIDLContent;
+import org.jupnp.support.model.WriteStatus;
+import org.jupnp.support.model.container.Container;
+import org.jupnp.support.model.container.StorageFolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

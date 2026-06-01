@@ -20,9 +20,9 @@
 */
 package org.airsonic.player.service.upnp;
 
-import org.fourthline.cling.support.contentdirectory.ContentDirectoryErrorCode;
-import org.fourthline.cling.support.contentdirectory.ContentDirectoryException;
-import org.fourthline.cling.support.model.*;
+import org.jupnp.support.contentdirectory.ContentDirectoryErrorCode;
+import org.jupnp.support.contentdirectory.ContentDirectoryException;
+import org.jupnp.support.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

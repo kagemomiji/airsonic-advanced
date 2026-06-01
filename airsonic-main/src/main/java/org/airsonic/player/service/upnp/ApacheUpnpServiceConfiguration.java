@@ -20,14 +20,14 @@
 */
 package org.airsonic.player.service.upnp;
 
-import org.fourthline.cling.DefaultUpnpServiceConfiguration;
-import org.fourthline.cling.transport.impl.apache.StreamClientConfigurationImpl;
-import org.fourthline.cling.transport.impl.apache.StreamClientImpl;
-import org.fourthline.cling.transport.impl.apache.StreamServerConfigurationImpl;
-import org.fourthline.cling.transport.impl.apache.StreamServerImpl;
-import org.fourthline.cling.transport.spi.NetworkAddressFactory;
-import org.fourthline.cling.transport.spi.StreamClient;
-import org.fourthline.cling.transport.spi.StreamServer;
+import org.airsonic.player.service.upnp.apache.StreamClientConfigurationImpl;
+import org.airsonic.player.service.upnp.apache.StreamClientImpl;
+import org.airsonic.player.service.upnp.apache.StreamServerConfigurationImpl;
+import org.airsonic.player.service.upnp.apache.StreamServerImpl;
+import org.jupnp.DefaultUpnpServiceConfiguration;
+import org.jupnp.transport.spi.NetworkAddressFactory;
+import org.jupnp.transport.spi.StreamClient;
+import org.jupnp.transport.spi.StreamServer;
 
 /**
  * Note the different packages on similarly named classes from the parent

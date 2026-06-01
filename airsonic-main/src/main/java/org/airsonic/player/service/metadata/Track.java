@@ -39,7 +39,7 @@ public class Track {
     public String getLanguageName() {
         if (this.language == null)
             return String.valueOf(this.id);
-        Locale locale = new Locale(this.language);
+        Locale locale = Locale.forLanguageTag(this.language);
         String languageName = StringUtils.trimToNull(locale.getDisplayLanguage(Locale.ENGLISH));
         return (languageName == null) ? this.language : languageName;
     }
