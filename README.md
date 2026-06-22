@@ -140,6 +140,8 @@ You need a _minimum_ Java Runtime Environment (JRE) of 1.8 for 10.6.x series, an
 
 Airsonic-Advanced is run similarly to (and in lieu of) vanilla Airsonic.
 
+On FreeBSD, an `rc.d` service script and setup instructions are available in [`contrib/freebsd`](./contrib/freebsd).
+
 Read the [compatibility notes](#compatibility-notes).
 
 ### Docker
