@@ -34,18 +34,18 @@ jobs:
         run: |
           platform="${{ matrix.cfg.platform }}"
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@ad2b38190b15e4d6bdf0c97fb4fca8412226d287 # v5.3.0
         with:
           java-version: ${{matrix.cfg.jdk}}
           distribution: 'temurin'
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
         with:
           platforms: ${{matrix.cfg.platform}}
       - name: Cache Maven packages
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -53,7 +53,7 @@ jobs:
             ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
         with:
           install: true
       - name: Available platforms
@@ -80,7 +80,7 @@ jobs:
         run: |
           echo "${{ secrets.GPG_SIGNING_PASSPHRASE }}" | gpg --quiet --batch --yes --pinentry-mode loopback --clearsign --passphrase-fd 0 airsonic-main/target/artifacts-checksums.sha;
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -89,7 +89,7 @@ jobs:
       - run: cp airsonic-main/target/airsonic.war install/docker/target/dependency/airsonic-main.war
       - name: Docker meta
         id: docker-meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
           images: ${{ env.REGISTRY_IMAGE }}
           tags: |
@@ -99,7 +99,7 @@ jobs:
             ${{ steps.tagcalc.outputs.tag }}
             gitcommit-${{ github.sha }}
       - name: Build and push multiplatform images to Dockerhub
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           file: install/docker/Dockerfile
           context: install/docker
@@ -110,7 +110,7 @@ jobs:
           labels: ${{steps.docker-meta.outputs.labels}}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: docker-digest-${{ steps.prep.outputs.PLATFORM_PAIR }}
           path: /tmp/digests/*
@@ -118,7 +118,7 @@ jobs:
           retention-days: 1
       - name: Upload war
         if: ${{matrix.cfg.jdk == 21 && matrix.cfg.platform == 'linux/amd64'}}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: airsonic.war
           path: |
@@ -127,7 +127,7 @@ jobs:
           retention-days: 1
       - name: Upload checksums
         if: ${{matrix.cfg.jdk == 21 && matrix.cfg.platform == 'linux/amd64'}}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: artifacts-checksums.sha
           path: |
@@ -141,28 +141,28 @@ jobs:
     needs: deploy
     steps:
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - name: Download digest
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
           pattern: docker-digest-*
           path: /tmp/digests
           merge-multiple: true
       - name: Download war
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
           name: airsonic.war
           path: /tmp/artifacts
       - name: Download checksums
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
           name: artifacts-checksums.sha
           path: /tmp/artifacts
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
       - name: Docker meta
         id: docker-meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         env:
           RELEASE_TAG: ${{ needs.deploy.outputs.tag }}
         with:
@@ -174,7 +174,7 @@ jobs:
             stable-${{ env.RELEASE_TAG }}
             gitcommit-${{ github.sha }}
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -192,7 +192,7 @@ jobs:
 
       - name: Deploy to GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ needs.deploy.outputs.tag }}
