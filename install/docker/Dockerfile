@@ -19,7 +19,7 @@ FROM eclipse-temurin:${IMAGE_JAVA_VERSION}-jre-jammy
 LABEL description="Airsonic-Advanced is a free, web-based media streamer, providing ubiquitous access to your music." \
       url="https://github.com/kagemomiji/airsonic-advanced"
 
-ENV AIRSONIC_PORT=4040 AIRSONIC_DIR=/var CONTEXT_PATH=/ UPNP_PORT=4041 PUID=0 PGID=0
+ENV AIRSONIC_PORT=4040 AIRSONIC_DIR=/var CONTEXT_PATH=/ UPNP_PORT=4041 PUID=0 PGID=0 AIRSONIC_MEMORY=256m
 
 WORKDIR $AIRSONIC_DIR
 
