@@ -118,7 +118,7 @@ jobs:
             gitcommit-${{ github.sha }}
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
         with:
           install: true
       - name: Available platforms
@@ -195,7 +195,7 @@ jobs:
           name: artifacts-checksums.sha
           path: /tmp/artifacts
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Docker meta
         id: docker-meta
         uses: docker/metadata-action@v5
