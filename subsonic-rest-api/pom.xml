@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-xjc-plugin</artifactId>
-                <version>4.1.0</version>
+                <version>4.2.0</version>
                 <configuration>
                     <sourceRoot>${basedir}/target/generated/src/main/java</sourceRoot>
                     <xsdOptions>

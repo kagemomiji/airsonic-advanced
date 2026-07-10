@@ -18,7 +18,7 @@ jobs:
     - run: |
         echo ${{github.repository}}
         echo ${{github.event.pull_request.head.repo.full_name}}}
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v7
       with:
         ref: ${{ github.event.pull_request.head.sha }}
     - name: Set up JDK
@@ -27,7 +27,7 @@ jobs:
         java-version: 21
         distribution: 'temurin'
     - name: Cache Maven packages
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -36,7 +36,7 @@ jobs:
     - name: Build with Maven
       run: mvn package -DskipTests -B -P docker
     - name: Upload war file
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: airsonic-advanced
         path: airsonic-main/target/airsonic.war
