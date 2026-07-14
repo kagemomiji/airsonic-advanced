@@ -1,0 +1,15 @@
+# Generated component index for faster Spring Boot startup
+# This pre-computed index avoids expensive classpath scanning during startup
+org.airsonic.player.Application=org.springframework.stereotype.Component
+org.airsonic.player.config.AirsonicCueConfig=org.springframework.stereotype.Component
+org.airsonic.player.config.AirsonicFolderConfig=org.springframework.stereotype.Component
+org.airsonic.player.config.AirsonicHomeConfig=org.springframework.stereotype.Component
+org.airsonic.player.config.AirsonicScanConfig=org.springframework.stereotype.Component
+org.airsonic.player.config.ThreadPoolConfig=org.springframework.stereotype.Component
+org.airsonic.player.spring.CacheConfiguration=org.springframework.stereotype.Component
+org.airsonic.player.spring.ServletConfiguration=org.springframework.stereotype.Component
+org.airsonic.player.spring.SonosConfiguration=org.springframework.stereotype.Component
+org.airsonic.player.spring.WebsocketConfiguration=org.springframework.stereotype.Component
+org.airsonic.player.security.GlobalSecurityConfig=org.springframework.stereotype.Component
+org.airsonic.player.security.PasswordEncoderConfig=org.springframework.stereotype.Component
+org.airsonic.player.service.sonos.MoxyConfiguration=org.springframework.stereotype.Component
