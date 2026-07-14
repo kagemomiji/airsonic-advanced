@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# PROVIDE: airsonic
+# REQUIRE: LOGIN NETWORKING
+# KEYWORD: shutdown
+#
+# Airsonic Media Server rc.d script for FreeBSD.
+#
+# Add the following line to /etc/rc.conf to enable airsonic:
+#
+#   airsonic_enable="YES"
+#
+# The following variables are optional (defaults shown). They mirror the knobs
+# exposed by the systemd unit in contrib/airsonic.service:
+#
+#   airsonic_home="/var/airsonic"            # AIRSONIC_HOME / -Dairsonic.home
+#   airsonic_war="/var/airsonic/airsonic.war"# JAVA_JAR
+#   airsonic_user="airsonic"                 # user the server runs as
+#   airsonic_group="airsonic"                # group the server runs as
+#   airsonic_java="/usr/local/bin/java"      # path to the JRE (JDK 17+)
+#   airsonic_java_opts="-Xmx700m"            # JAVA_OPTS (heap, GC, ...)
+#   airsonic_port="8080"                     # PORT / -Dserver.port
+#   airsonic_context_path="/airsonic"        # CONTEXT_PATH / context-path
+#   airsonic_args=""                         # JAVA_ARGS (passed to the app)
+#   airsonic_log="/var/log/airsonic.log"     # stdout/stderr log file
+#
+# Notes:
+#   * Requires an OpenJDK package (e.g. openjdk21). FreeBSD installs the JRE
+#     under /usr/local/openjdkNN/bin/java; if /usr/local/bin/java does not
+#     exist, set airsonic_java accordingly, e.g.
+#       airsonic_java="/usr/local/openjdk21/bin/java"
+#   * Privilege drop is handled by daemon(8) (-u). Do NOT also set a login
+#     class / rc.subr user drop for this service: combining both fails with
+#     "daemon: open: Permission denied".
+
+. /etc/rc.subr
+
+name="airsonic"
+rcvar="airsonic_enable"
+
+load_rc_config "$name"
+
+: ${airsonic_enable:="NO"}
+: ${airsonic_home:="/var/airsonic"}
+: ${airsonic_war:="${airsonic_home}/airsonic.war"}
+: ${airsonic_user:="airsonic"}
+: ${airsonic_group:="airsonic"}
+: ${airsonic_java:="/usr/local/bin/java"}
+: ${airsonic_java_opts:="-Xmx700m"}
+: ${airsonic_port:="8080"}
+: ${airsonic_context_path:="/airsonic"}
+: ${airsonic_args:=""}
+: ${airsonic_log:="/var/log/${name}.log"}
+
+pidfile="/var/run/${name}/${name}.pid"
+procname="${airsonic_java}"
+
+start_precmd="airsonic_precmd"
+start_cmd="airsonic_start"
+
+airsonic_precmd()
+{
+	# pidfile directory, owned by the run user so daemon(8) can write it
+	if [ ! -d "/var/run/${name}" ]; then
+		install -d -o "${airsonic_user}" -g "${airsonic_group}" -m 0755 \
+			"/var/run/${name}"
+	fi
+	# log file, writable by the run user
+	if [ ! -e "${airsonic_log}" ]; then
+		install -o "${airsonic_user}" -g "${airsonic_group}" -m 0640 \
+			/dev/null "${airsonic_log}"
+	fi
+}
+
+airsonic_start()
+{
+	check_startmsgs && echo "Starting ${name}."
+	/usr/sbin/daemon -f -u "${airsonic_user}" \
+		-p "${pidfile}" -o "${airsonic_log}" \
+		"${airsonic_java}" ${airsonic_java_opts} \
+		-Djava.awt.headless=true \
+		-Dairsonic.home="${airsonic_home}" \
+		-Dserver.servlet.context-path="${airsonic_context_path}" \
+		-Dserver.port="${airsonic_port}" \
+		-jar "${airsonic_war}" ${airsonic_args}
+}
+
+run_rc_command "$1"
