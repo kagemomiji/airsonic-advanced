@@ -99,13 +99,13 @@ public class AlbumUpnpProcessor extends UpnpContentProcessor <Album, MediaFile> 
         } else {
             container.setId(getRootId() + DispatchingContentDirectory.SEPARATOR + album.getId());
             container.setAlbumArtURIs(new URI[] { upnpUtil.getAlbumArtURI(album.getId()) });
-            container.setDescription(album.getComment());
+            container.setDescription(UpnpUtil.sanitizeXml(album.getComment()));
         }
         container.setParentID(getRootId());
-        container.setTitle(album.getName());
+        container.setTitle(UpnpUtil.sanitizeXml(album.getName()));
         // TODO: correct artist?
         if (album.getArtist() != null) {
-            container.setArtists(getAlbumArtists(album.getArtist()));
+            container.setArtists(getAlbumArtists(UpnpUtil.sanitizeXml(album.getArtist())));
         }
         return container;
     }

@@ -116,7 +116,7 @@ public class SettingsService {
     private static final String KEY_SORT_ALBUMS_BY_YEAR = "SortAlbumsByYear";
     private static final String KEY_DLNA_ENABLED = "DlnaEnabled";
     private static final String KEY_DLNA_SERVER_NAME = "DlnaServerName";
-    private static final String KEY_DLNA_SERVER_ID = "DlnaServerId";
+    private static final String KEY_DLNA_SERVER_ID_OVERRIDE = "DlnaServerIdOverride";
     private static final String KEY_DLNA_BASE_LAN_URL = "DlnaBaseLANURL";
     private static final String KEY_UPNP_PORT = "UPnpPort";
     private static final String KEY_SONOS_ENABLED = "SonosEnabled";
@@ -1247,12 +1247,12 @@ public class SettingsService {
         setString(KEY_DLNA_SERVER_NAME, dlnaServerName);
     }
 
-    public String getDlnaServerId() {
-        return getString(KEY_DLNA_SERVER_ID, DEFAULT_DLNA_SERVER_ID); // default is null
+    public String getDlnaServerIdOverride() {
+        return getString(KEY_DLNA_SERVER_ID_OVERRIDE, DEFAULT_DLNA_SERVER_ID); // default is null
     }
 
-    public void setDlnaServerId(String dlnaServerId) {
-        setString(KEY_DLNA_SERVER_ID, dlnaServerId);
+    public void setDlnaServerIdOverride(String dlnaServerId) {
+        setString(KEY_DLNA_SERVER_ID_OVERRIDE, dlnaServerId);
     }
 
     public String getDlnaBaseLANURL() {

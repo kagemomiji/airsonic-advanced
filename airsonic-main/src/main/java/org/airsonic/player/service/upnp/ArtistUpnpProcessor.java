@@ -76,7 +76,7 @@ public class ArtistUpnpProcessor extends UpnpContentProcessor <Artist, Album> {
         MusicArtist container = new MusicArtist();
         container.setId(getRootId() + DispatchingContentDirectory.SEPARATOR + artist.getId());
         container.setParentID(getRootId());
-        container.setTitle(artist.getName());
+        container.setTitle(UpnpUtil.sanitizeXml(artist.getName()));
         container.setChildCount(artist.getAlbumCount());
 
         return container;

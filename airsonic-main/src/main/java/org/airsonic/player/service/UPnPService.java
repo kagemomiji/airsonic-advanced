@@ -50,7 +50,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -197,12 +196,8 @@ public class UPnPService {
         }
 
         String serverName = settingsService.getDlnaServerName();
-        String serverId = settingsService.getDlnaServerId();
+        String dlnaServerIdOverride = settingsService.getDlnaServerIdOverride();
         String serialNumber = versionService.getLocalBuildNumber();
-        if (serverId == null) {
-            serverId = UUID.randomUUID().toString();
-            settingsService.setDlnaServerId(serverId);
-        }
 
         // TODO: DLNACaps
         DLNADoc[] dlnaDocs = new DLNADoc[] { new DLNADoc("DMS", DLNADoc.Version.V1_5) };
@@ -214,8 +209,17 @@ public class UPnPService {
                 manufacturerURI);
         DeviceDetails details = new DeviceDetails(serverName, manufacturerDetails, modelDetails, serialNumber, null,
                 presentaionURI, dlnaDocs, null);
-        DeviceIdentity identity = new DeviceIdentity(UDN.uniqueSystemIdentifier(serverName),
-                MIN_ADVERTISEMENT_AGE_SECONDS);
+
+        // if some parts of the system change then UDN.valueOf(serverId) can change,
+        // which can cause the identity to change. this will result in any systems
+        // that save references to the DLNA server to lose them. this allows us to
+        // override that value if necessary so that our DLNA identity is always
+        // stable
+        UDN idUdn = dlnaServerIdOverride != null ?
+            UDN.valueOf(dlnaServerIdOverride) :
+            UDN.uniqueSystemIdentifier(serverName);
+
+        DeviceIdentity identity = new DeviceIdentity(idUdn, MIN_ADVERTISEMENT_AGE_SECONDS);
         DeviceType type = new UDADeviceType("MediaServer", 1);
 
         return new LocalDevice(identity, type, details, new Icon[] { icon },

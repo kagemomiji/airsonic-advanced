@@ -55,6 +55,9 @@ public class GlobalSecurityConfig {
     @Autowired
     private SonosJWTVerification sonosJwtVerification;
 
+    @Autowired
+    private DLNAAuthenticationProvider dlnaAuthProvider;
+
     @EventListener
     public void loginFailureListener(AbstractAuthenticationFailureEvent event) {
         if (event.getSource() instanceof AbstractAuthenticationToken) {
@@ -91,6 +94,7 @@ public class GlobalSecurityConfig {
         jwtAuth.addAdditionalCheck("/ws/Sonos", sonosJwtVerification);
         auth.authenticationProvider(jwtAuth);
         auth.authenticationProvider(multipleCredsProvider);
+        auth.authenticationProvider(dlnaAuthProvider);
     }
 
     @Bean
@@ -108,6 +112,7 @@ public class GlobalSecurityConfig {
                 authenticationManager,
                 FAILURE_URL)
             , UsernamePasswordAuthenticationFilter.class);
+        http = http.addFilterBefore(new DLNARequestParameterProcessingFilter(authenticationManager, FAILURE_URL), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .securityMatcher("/ext/**")

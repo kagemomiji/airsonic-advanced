@@ -201,10 +201,10 @@ public class FolderBasedContentDirectory extends CustomContentDirectory {
         MusicTrack item = new MusicTrack();
         item.setId(String.valueOf(song.getId()));
         item.setParentID(String.valueOf(parent.getId()));
-        item.setTitle(song.getTitle());
-        item.setAlbum(song.getAlbumName());
+        item.setTitle(UpnpUtil.sanitizeXml(song.getTitle()));
+        item.setAlbum(UpnpUtil.sanitizeXml(song.getAlbumName()));
         if (song.getArtist() != null) {
-            item.setArtists(new PersonWithRole[]{new PersonWithRole(song.getArtist())});
+            item.setArtists(new PersonWithRole[]{new PersonWithRole(UpnpUtil.sanitizeXml(song.getArtist()))});
         }
         Integer year = song.getYear();
         if (year != null) {
@@ -212,10 +212,10 @@ public class FolderBasedContentDirectory extends CustomContentDirectory {
         }
         item.setOriginalTrackNumber(song.getTrackNumber());
         if (song.getGenre() != null) {
-            item.setGenres(new String[]{song.getGenre()});
+            item.setGenres(new String[]{UpnpUtil.sanitizeXml(song.getGenre())});
         }
         item.setResources(Arrays.asList(upnpUtil.createResourceForSong(song)));
-        item.setDescription(song.getComment());
+        item.setDescription(UpnpUtil.sanitizeXml(song.getComment()));
         item.addProperty(new DIDLObject.Property.UPNP.ALBUM_ART_URI(upnpUtil.getAlbumArtURI(parent.getId())));
 
         return item;
@@ -224,7 +224,7 @@ public class FolderBasedContentDirectory extends CustomContentDirectory {
     private Container createContainer(MediaFile mediaFile) {
         Container container = mediaFile.isAlbum() ? createAlbumContainer(mediaFile) : new MusicAlbum();
         container.setId(CONTAINER_ID_FOLDER_PREFIX + mediaFile.getId());
-        container.setTitle(mediaFile.getName());
+        container.setTitle(UpnpUtil.sanitizeXml(mediaFile.getName()));
         List<MediaFile> children = mediaFileService.getVisibleChildrenOf(mediaFile, true, false);
         container.setChildCount(children.size());
 
@@ -266,8 +266,8 @@ public class FolderBasedContentDirectory extends CustomContentDirectory {
         PlaylistContainer container = new PlaylistContainer();
         container.setId(CONTAINER_ID_PLAYLIST_PREFIX + playlist.getId());
         container.setParentID(CONTAINER_ID_PLAYLIST_ROOT);
-        container.setTitle(playlist.getName());
-        container.setDescription(playlist.getComment());
+        container.setTitle(UpnpUtil.sanitizeXml(playlist.getName()));
+        container.setDescription(UpnpUtil.sanitizeXml(playlist.getComment()));
         container.setChildCount(playlistService.getFilesInPlaylist(playlist.getId()).size());
 
         return container;

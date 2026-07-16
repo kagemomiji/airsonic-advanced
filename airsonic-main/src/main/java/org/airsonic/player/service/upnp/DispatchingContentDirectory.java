@@ -82,6 +82,9 @@ public class DispatchingContentDirectory extends CustomContentDirectory {
                 returnValue = browseFlag == BrowseFlag.METADATA ? processor.browseObjectMetadata(itemId)
                         : processor.browseObject(itemId, filter, firstResult, maxResults, orderBy);
             }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("upnp request returning result {}", returnValue.getResult());
+            }
             return returnValue;
         } catch (Throwable x) {
             LOG.error("UPnP error: " + x, x);

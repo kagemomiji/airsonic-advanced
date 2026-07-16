@@ -52,8 +52,8 @@ public class PlaylistUpnpProcessor extends UpnpContentProcessor <Playlist, Media
         PlaylistContainer container = new PlaylistContainer();
         container.setId(getRootId() + DispatchingContentDirectory.SEPARATOR + item.getId());
         container.setParentID(getRootId());
-        container.setTitle(item.getName());
-        container.setDescription(item.getComment());
+        container.setTitle(UpnpUtil.sanitizeXml(item.getName()));
+        container.setDescription(UpnpUtil.sanitizeXml(item.getComment()));
         container.setChildCount(playlistService.getFilesInPlaylist(item.getId()).size());
 
         return container;

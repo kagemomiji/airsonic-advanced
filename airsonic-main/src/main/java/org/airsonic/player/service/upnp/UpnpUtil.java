@@ -23,8 +23,7 @@ package org.airsonic.player.service.upnp;
 import org.airsonic.player.domain.CoverArtScheme;
 import org.airsonic.player.domain.MediaFile;
 import org.airsonic.player.domain.Player;
-import org.airsonic.player.domain.User;
-import org.airsonic.player.service.JWTSecurityService;
+import org.airsonic.player.security.DLNARequestParameterProcessingFilter;
 import org.airsonic.player.service.PlayerService;
 import org.airsonic.player.service.SecurityService;
 import org.airsonic.player.service.SettingsService;
@@ -51,9 +50,6 @@ public class UpnpUtil {
     private PlayerService playerService;
 
     @Autowired
-    private JWTSecurityService jwtSecurityService;
-
-    @Autowired
     private SettingsService settingsService;
 
     @Autowired
@@ -72,7 +68,7 @@ public class UpnpUtil {
             builder.queryParam("format", TranscodingService.FORMAT_RAW);
         }
 
-        builder = jwtSecurityService.addJWTToken(User.USERNAME_ANONYMOUS, builder);
+        builder.queryParam(DLNARequestParameterProcessingFilter.DLNA_AUTH_PARAMETER, "true");
 
         String url = getBaseUrl() + builder.toUriString();
 
@@ -101,16 +97,21 @@ public class UpnpUtil {
     }
 
     public URI getAlbumArtURI(int albumId) {
-        return UriComponentsBuilder
-                .fromUriString(getBaseUrl())
-                .uriComponents(jwtSecurityService
-                        .addJWTToken(
-                                User.USERNAME_ANONYMOUS,
-                                UriComponentsBuilder.fromUriString("ext/coverArt.view")
-                                        .queryParam("id", albumId)
-                                        .queryParam("size", CoverArtScheme.LARGE.getSize()))
-                        .build())
-                .build().encode().toUri();
+        return UriComponentsBuilder.fromUriString(getBaseUrl() + "ext/coverArt.view")
+          .queryParam("id", albumId)
+          .queryParam("size", CoverArtScheme.LARGE.getSize())
+          .queryParam(DLNARequestParameterProcessingFilter.DLNA_AUTH_PARAMETER, "true")
+          .build().encode().toUri();
+    }
+
+    static final String xmlPattern = "[^"
+            + "\u0009\r\n"
+            + "\u0020-\uD7FF"
+            + "\uE000-\uFFFD"
+            + "\ud800\udc00-\udbff\udfff"
+            + "]";
+    public static String sanitizeXml(String source) {
+        return source == null ? null : source.replaceAll(xmlPattern, "");
     }
 
 }

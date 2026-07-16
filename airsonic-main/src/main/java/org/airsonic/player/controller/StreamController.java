@@ -23,11 +23,13 @@ package org.airsonic.player.controller;
 import com.google.re2j.Matcher;
 import com.google.re2j.Pattern;
 import org.airsonic.player.domain.*;
+import org.airsonic.player.domain.User.Role;
 import org.airsonic.player.io.PipeStreams.MonitoredInputStream;
 import org.airsonic.player.io.PipeStreams.PipedInputStream;
 import org.airsonic.player.io.PipeStreams.PipedOutputStream;
 import org.airsonic.player.io.PlayQueueInputStream;
 import org.airsonic.player.io.ShoutCastOutputStream;
+import org.airsonic.player.security.DLNAAuthenticationToken;
 import org.airsonic.player.security.JWTAuthenticationToken;
 import org.airsonic.player.service.*;
 import org.airsonic.player.service.sonos.SonosHelper;
@@ -115,8 +117,13 @@ public class StreamController {
             ServletWebRequest swr) throws Exception {
 
         String username = securityService.getCurrentUsername(swr.getRequest());
-        User user = securityService.getUserByName(username);
-        if (!(authentication instanceof JWTAuthenticationToken) && !user.isStreamRole()) {
+        User user = (authentication instanceof DLNAAuthenticationToken) ?
+            new User(username, null, false, 0, 0, 0, Set.of(Role.STREAM)) :
+            securityService.getUserByName(username);
+
+        if (!(authentication instanceof JWTAuthenticationToken ||
+            authentication instanceof DLNAAuthenticationToken) &&
+            !user.isStreamRole()) {
             throw new AccessDeniedException("Streaming is forbidden for user " + username);
         }
 
@@ -154,7 +161,7 @@ public class StreamController {
 
         if (isSingleFile) {
 
-            if (!(authentication instanceof JWTAuthenticationToken)
+            if (!(authentication instanceof JWTAuthenticationToken || authentication instanceof DLNAAuthenticationToken)
                     && !securityService.isFolderAccessAllowed(file, username)) {
                 throw new AccessDeniedException("Access to file " + file.getId() + " is forbidden for user " + username);
             }
