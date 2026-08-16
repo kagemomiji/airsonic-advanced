@@ -12,14 +12,14 @@ import java.util.function.Function;
 public class PlayQueueInputStream extends InputStream {
     private final PlayQueue queue;
     private final Consumer<MediaFile> fileStartListener;
-    private final BiConsumer<Integer, MediaFile> fileEndListener;
+    private final BiConsumer<Long, MediaFile> fileEndListener;
     private final Function<MediaFile, InputStream> streamGenerator;
     private InputStream currentStream;
     private MediaFile currentFile;
-    private Integer readCount = 0;
+    private long bytesRead = 0;
 
     public PlayQueueInputStream(PlayQueue queue, Consumer<MediaFile> fileStartListener,
-            BiConsumer<Integer, MediaFile> fileEndListener, Function<MediaFile, InputStream> streamGenerator) {
+            BiConsumer<Long, MediaFile> fileEndListener, Function<MediaFile, InputStream> streamGenerator) {
         this.queue = queue;
         this.fileStartListener = fileStartListener;
         this.fileEndListener = fileEndListener;
@@ -54,6 +54,7 @@ public class PlayQueueInputStream extends InputStream {
             return read(b, off, len);
         }
 
+        bytesRead += n;
         return n;
     }
 
@@ -73,8 +74,6 @@ public class PlayQueueInputStream extends InputStream {
             currentFile = file;
             fileStartListener.accept(currentFile);
             currentStream = streamGenerator.apply(currentFile);
-        } else {
-            readCount++;
         }
     }
 
@@ -84,10 +83,10 @@ public class PlayQueueInputStream extends InputStream {
             currentStream = null;
         }
         if (currentFile != null) {
-            fileEndListener.accept(readCount, currentFile);
+            fileEndListener.accept(bytesRead, currentFile);
             currentFile = null;
         }
-        readCount = 0;
+        bytesRead = 0;
     }
 
     @Override

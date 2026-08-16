@@ -219,11 +219,16 @@ public class StreamController {
             statusService.addActiveLocalPlay(
                     new PlayStatus(status.getId(), mediaFile, player, status.getMillisSinceLastUpdate()));
         };
-        BiConsumer<Integer, MediaFile> fileEndListener = (readCount, mediaFile) -> {
-            if (readCount != null && readCount > 0 && player.getTechnology() != PlayerTechnology.WEB) {
-                // Increment play count if the file was actually played
-                // WEB player increments play count on the client side
-                mediaFileService.incrementPlayCount(player, mediaFile);
+        BiConsumer<Long, MediaFile> fileEndListener = (bytesStreamed, mediaFile) -> {
+            if (bytesStreamed != null && player.getTechnology() != PlayerTechnology.WEB) {
+                // Require at least 10% of the estimated file size to count as a play.
+                // This prevents external players that probe stream URLs for metadata
+                // from inflating play counts on every file access.
+                // WEB player increments play count on the client side.
+                long estimatedBytes = estimateFileBytes(mediaFile);
+                if (bytesStreamed >= estimatedBytes / 10) {
+                    mediaFileService.incrementPlayCount(player, mediaFile);
+                }
             }
             scrobble(mediaFile, player, true);
             statusService.removeActiveLocalPlay(
@@ -289,6 +294,17 @@ public class StreamController {
     @ExceptionHandler(AsyncRequestNotUsableException.class)
     public void handleAsyncRequestNotUsableException(AsyncRequestNotUsableException e) {
         LOG.info("Client Aborted");
+    }
+
+    private long estimateFileBytes(MediaFile mediaFile) {
+        Double duration = mediaFile.getDuration();
+        Integer bitRate = mediaFile.getBitRate();
+        if (duration != null && duration > 0 && bitRate != null && bitRate > 0) {
+            return (long) (duration * bitRate * 1000L / 8);
+        }
+        // Unknown duration/bitrate: use a conservative 256 KB floor so any real
+        // playback attempt passes while a brief metadata probe does not.
+        return 256L * 1024;
     }
 
     private void scrobble(MediaFile mediaFile, Player player, boolean submission) {
