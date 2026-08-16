@@ -40,7 +40,7 @@ jobs:
           name: build-metadata
           path: airsonic-main/target/generated/build-metadata/build.properties 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.cfg.runner }}
     needs: version
     strategy:
       fail-fast: false
@@ -49,12 +49,15 @@ jobs:
         - jdk: 17
           platform: linux/arm/v7
           docker_version: 17.0.15_6
+          runner: ubuntu-latest
         - jdk: 21
           platform: linux/amd64
           docker_version: 21.0.7_6
+          runner: ubuntu-latest
         - jdk: 21
           platform: linux/arm64
           docker_version: 21.0.7_6
+          runner: ubuntu-24.04-arm
     outputs:
       tag: ${{ steps.tagcalc.outputs.tag }}
     steps:
@@ -79,6 +82,7 @@ jobs:
           java-version: ${{ matrix.cfg.jdk }}
           distribution: 'temurin'
       - name: Set up QEMU
+        if: matrix.cfg.platform == 'linux/arm/v7'
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ matrix.cfg.platform }}

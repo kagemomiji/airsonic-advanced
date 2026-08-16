@@ -48,13 +48,16 @@ jobs:
         - jdk: 17
           platform: linux/arm/v7
           docker_version: 17.0.15_6
+          runner: ubuntu-latest
         - jdk: 21
           platform: linux/amd64
           docker_version: 21.0.7_6
+          runner: ubuntu-latest
         - jdk: 21
           platform: linux/arm64
           docker_version: 21.0.7_6
-    runs-on: ubuntu-latest
+          runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.cfg.runner }}
     if: github.repository == github.event.pull_request.head.repo.full_name 
     steps:
       - name: Prepare
@@ -91,6 +94,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
       - name: Set up QEMU
+        if: matrix.cfg.platform == 'linux/arm/v7'
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ matrix.cfg.platform }}
