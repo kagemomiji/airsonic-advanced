@@ -571,7 +571,11 @@ public class MediaFileService {
      * @return The updated genres.
      */
     @Transactional
-    public List<Genre> updateGenres(List <Genre> genres) {
+    public List<Genre> updateGenres(List<Genre> genres) {
+        // Replace the entire genre table so stale entries from previous scans
+        // (e.g. combined "Dance;Edm;House" after switching to split-tag mode)
+        // are not left behind with incorrect counts.
+        genreRepository.deleteAllInBatch();
         return genreRepository.saveAll(genres);
     }
 

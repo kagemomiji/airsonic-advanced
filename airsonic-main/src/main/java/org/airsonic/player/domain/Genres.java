@@ -45,24 +45,29 @@ public class Genres {
 
     public void incrementAlbumCount(String genreName, String separators) {
         String[] splitGenres = StringUtils.split(genreName, separators);
-        if (splitGenres.length > 1) { // otherwise it's the same genre as the original
+        if (splitGenres.length > 1) {
+            // Split genres: index each component only, not the combined string.
+            // The combined tag (e.g. "Dance;Edm;House") is an implementation detail
+            // of how tags are stored, not a genre in its own right.
             Stream.of(splitGenres)
                     .map(StringUtils::trim)
                     .filter(StringUtils::isNotBlank)
                     .forEach(s -> genres.computeIfAbsent(s, k -> new Genre(k)).incrementAlbumCount());
+        } else {
+            genres.computeIfAbsent(genreName, k -> new Genre(k)).incrementAlbumCount();
         }
-        genres.computeIfAbsent(genreName, k -> new Genre(k)).incrementAlbumCount();
     }
 
     public void incrementSongCount(String genreName, String separators) {
         String[] splitGenres = StringUtils.split(genreName, separators);
-        if (splitGenres.length > 1) { // otherwise it's the same genre as the original
+        if (splitGenres.length > 1) {
             Stream.of(splitGenres)
                     .map(StringUtils::trim)
                     .filter(StringUtils::isNotBlank)
                     .forEach(s -> genres.computeIfAbsent(s, k -> new Genre(k)).incrementSongCount());
+        } else {
+            genres.computeIfAbsent(genreName, k -> new Genre(k)).incrementSongCount();
         }
-        genres.computeIfAbsent(genreName, k -> new Genre(k)).incrementSongCount();
     }
 
     public List<Genre> getGenres() {
