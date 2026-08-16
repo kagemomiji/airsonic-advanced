@@ -9,6 +9,7 @@ import org.airsonic.player.domain.UserCredential.App;
 import org.airsonic.player.security.PasswordEncoderConfig;
 import org.airsonic.player.service.SecurityService;
 import org.airsonic.player.service.SettingsService;
+import org.airsonic.player.service.UserService;
 import org.airsonic.player.validator.CredentialsManagementValidators.CredentialCreateChecks;
 import org.airsonic.player.validator.CredentialsManagementValidators.CredentialUpdateChecks;
 import org.apache.commons.beanutils.BeanMap;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.validation.groups.Default;
@@ -31,6 +33,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -45,6 +48,9 @@ public class CredentialsManagementController {
     @Autowired
     private SettingsService settingsService;
 
+    @Autowired
+    private UserService userService;
+
     private static final Map<String, String> ENCODER_ALIASES = ImmutableMap.of("noop", "plaintext", "legacynoop",
             "legacyplaintext (deprecated)", "legacyhex", "legacyhex (deprecated)");
 
@@ -54,8 +60,20 @@ public class CredentialsManagementController {
     }
 
     @ModelAttribute
-    protected void displayForm(Authentication user, ModelMap map) {
-        List<CredentialsCommand> creds = securityService.getCredentials(user.getName(), App.values())
+    protected void displayForm(Authentication user, ModelMap map,
+            @RequestParam(required = false) String username) {
+        User userInDb = securityService.getUserByName(user.getName());
+
+        // Admins may view/manage credentials for any user via ?username=X
+        String targetUsername = user.getName();
+        if (userInDb.isAdminRole() && username != null && !username.isBlank()) {
+            User targetUser = securityService.getUserByName(username);
+            if (targetUser != null) {
+                targetUsername = username;
+            }
+        }
+
+        List<CredentialsCommand> creds = securityService.getCredentials(targetUsername, App.values())
                 .parallelStream()
                 .map(CredentialsCommand::fromUserCredential)
                 .map(c -> {
@@ -78,8 +96,6 @@ public class CredentialsManagementController {
                 .sorted(Comparator.comparing(CredentialsCommand::getCreated))
                 .collect(Collectors.toList());
 
-        User userInDb = securityService.getUserByName(user.getName());
-
         // for updates/deletes/read
         map.addAttribute("command", new CredentialsManagementCommand(creds));
         // for new creds
@@ -95,55 +111,78 @@ public class CredentialsManagementController {
         map.addAttribute("preferredEncoderNonDecodableAllowed", securityService.getPreferredPasswordEncoder(true));
         map.addAttribute("preferredEncoderDecodableOnly", securityService.getPreferredPasswordEncoder(false));
 
-        map.addAttribute("ldapAuthEnabledForUser", userInDb.isLdapAuthenticated());
+        map.addAttribute("ldapAuthEnabledForUser", securityService.getUserByName(targetUsername).isLdapAuthenticated());
         map.addAttribute("adminRole", userInDb.isAdminRole());
+        map.addAttribute("targetUsername", targetUsername);
 
         // admin restricted, installation-wide settings
-        if (userInDb.isAdminRole() && !map.containsAttribute("adminControls")) {
-            map.addAttribute("adminControls",
-                    new AdminControls(
-                            securityService.checkLegacyCredsPresent(),
-                            securityService.checkOpenCredsPresent(),
-                            securityService.checkDefaultAdminCredsPresent(),
-                            settingsService.getJWTKey(),
-                            settingsService.getEncryptionPassword(),
-                            settingsService.getEncryptionSalt(),
-                            settingsService.getNonDecodablePasswordEncoder(),
-                            settingsService.getDecodablePasswordEncoder(),
-                            settingsService.getPreferNonDecodablePasswords()
-                            ));
+        if (userInDb.isAdminRole()) {
+            map.addAttribute("allUsernames",
+                    userService.getAllUsers().stream().map(User::getUsername).sorted().collect(Collectors.toList()));
+            if (!map.containsAttribute("adminControls")) {
+                map.addAttribute("adminControls",
+                        new AdminControls(
+                                securityService.checkLegacyCredsPresent(),
+                                securityService.checkOpenCredsPresent(),
+                                securityService.checkDefaultAdminCredsPresent(),
+                                settingsService.getJWTKey(),
+                                settingsService.getEncryptionPassword(),
+                                settingsService.getEncryptionSalt(),
+                                settingsService.getNonDecodablePasswordEncoder(),
+                                settingsService.getDecodablePasswordEncoder(),
+                                settingsService.getPreferNonDecodablePasswords()
+                                ));
+            }
         }
     }
 
     @PostMapping
-    protected String createNewCreds(Principal user,
+    protected String createNewCreds(Authentication user,
             @ModelAttribute("newCreds") @Validated(value = { Default.class, CredentialCreateChecks.class }) CredentialsCommand cc,
-            BindingResult br, RedirectAttributes redirectAttributes, ModelMap map) {
+            BindingResult br, RedirectAttributes redirectAttributes, ModelMap map,
+            @RequestParam(required = false) String targetUsername) {
         if (br.hasErrors()) {
             map.addAttribute("open_CreateCredsDialog", true);
             return "credentialsSettings";
         }
 
-        boolean success = securityService.createCredential(user.getName(), cc, "Created by user");
+        String credOwner = resolveTargetUsername(user, targetUsername);
+        boolean success = securityService.createCredential(credOwner, cc, "Created by user");
 
         redirectAttributes.addFlashAttribute("settings_toast", success);
 
-        return "redirect:credentialsSettings.view";
+        return "redirect:credentialsSettings.view" + (credOwner.equals(user.getName()) ? "" : "?username=" + credOwner);
     }
 
     @PostMapping("update")
-    protected String updateCreds(Principal user,
+    protected String updateCreds(Authentication user,
             @ModelAttribute("command") @Validated(value = { Default.class, CredentialUpdateChecks.class }) CredentialsManagementCommand cmc,
-            BindingResult br, RedirectAttributes redirectAttributes) {
+            BindingResult br, RedirectAttributes redirectAttributes,
+            @RequestParam(required = false) String targetUsername) {
         if (br.hasErrors()) {
             return "credentialsSettings";
         }
 
-        boolean result = securityService.updateCredentials(user.getName(), cmc, "User updated", false);
+        String credOwner = resolveTargetUsername(user, targetUsername);
+        boolean result = securityService.updateCredentials(credOwner, cmc, "User updated", false);
 
         redirectAttributes.addFlashAttribute("settings_toast", result);
 
-        return "redirect:/credentialsSettings.view";
+        return "redirect:/credentialsSettings.view" + (credOwner.equals(user.getName()) ? "" : "?username=" + credOwner);
+    }
+
+    private String resolveTargetUsername(Authentication user, String targetUsername) {
+        if (targetUsername == null || targetUsername.isBlank()) {
+            return user.getName();
+        }
+        User userInDb = securityService.getUserByName(user.getName());
+        if (userInDb != null && userInDb.isAdminRole()) {
+            User target = securityService.getUserByName(targetUsername);
+            if (target != null) {
+                return target.getUsername();
+            }
+        }
+        return user.getName();
     }
 
     @PostMapping(path = "/admin")
