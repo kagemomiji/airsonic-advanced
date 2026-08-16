@@ -266,6 +266,7 @@ public class MediaFileService {
                 && (mediaFile.getVersion() < MediaFile.VERSION
                     || settingsService.getFullScan()
                     || mediaFile.isChanged()
+                    || !mediaFile.isPresent() // always recheck absent files so remounted paths recover
                     || (mediaFile.hasIndex() && mediaFile.getChanged().truncatedTo(ChronoUnit.MICROS).compareTo(FileUtil.lastModified(mediaFile.getFullIndexPath()).truncatedTo(ChronoUnit.MICROS)) < 0)
                 );
     }

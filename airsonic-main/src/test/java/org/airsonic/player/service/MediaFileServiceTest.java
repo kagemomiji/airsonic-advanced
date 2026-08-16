@@ -36,6 +36,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -55,6 +56,8 @@ public class MediaFileServiceTest {
     private MediaFileCache mediaFileCache;
     @Mock
     private MediaFolderService mediaFolderService;
+    @Mock
+    private SettingsService settingsService;
 
     @InjectMocks
     private MediaFileService mediaFileService;
@@ -97,5 +100,31 @@ public class MediaFileServiceTest {
         verify(mediaFileRepository).findByFolderAndPath(any(), eq("valid/airsonic-test.wav"));
         verify(mediaFileRepository).save(base);
         verify(coverArtService).persistIfNeeded(eq(base));
+    }
+
+    @Test
+    public void testNonPresentFileForcesNeedsUpdate() {
+        when(mockedMediaFile.isPresent()).thenReturn(false);
+        when(mockedMediaFile.isIndexedTrack()).thenReturn(false);
+        when(mockedMediaFile.getVersion()).thenReturn(MediaFile.VERSION);
+        when(settingsService.getFullScan()).thenReturn(false);
+        when(mockedMediaFile.isChanged()).thenReturn(false);
+        when(mockedMediaFile.hasIndex()).thenReturn(false);
+
+        Boolean result = ReflectionTestUtils.invokeMethod(mediaFileService, "needsUpdate", mockedMediaFile, false);
+        assertTrue(result, "Non-present file must trigger needsUpdate so remounted paths recover to present=true");
+    }
+
+    @Test
+    public void testPresentFileWithNoChangesDoesNotNeedUpdate() {
+        when(mockedMediaFile.isPresent()).thenReturn(true);
+        when(mockedMediaFile.isIndexedTrack()).thenReturn(false);
+        when(mockedMediaFile.getVersion()).thenReturn(MediaFile.VERSION);
+        when(settingsService.getFullScan()).thenReturn(false);
+        when(mockedMediaFile.isChanged()).thenReturn(false);
+        when(mockedMediaFile.hasIndex()).thenReturn(false);
+
+        Boolean result = ReflectionTestUtils.invokeMethod(mediaFileService, "needsUpdate", mockedMediaFile, false);
+        assertFalse(result, "Present up-to-date file should not trigger needsUpdate");
     }
 }
