@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class PipeStreamsTest {
@@ -143,5 +144,14 @@ public class PipeStreamsTest {
         }
 
         assertThat(eventSet).containsOnly("inputStreamOpened", "statusClosed");
+    }
+
+    @Test
+    public void testCloseUnconnectedPipedInputStreamDoesNotThrow() throws IOException {
+        // PipedInputStream with no connected source must close silently.
+        // Previously threw IOException("Unconnected pipe"), which prevented
+        // MonitoredInputStream.close() from running statusCloser, leaking TransferStatus.
+        PipedInputStream pin = new PipedInputStream(null, 16);
+        assertThatNoException().isThrownBy(pin::close);
     }
 }

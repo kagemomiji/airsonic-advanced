@@ -61,6 +61,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -255,11 +257,12 @@ public class DownloadController {
             // zip to out
             BiConsumer<InputStream, TransferStatus> poutInit = (input, status) -> {
                 PipedInputStream pin = (PipedInputStream) input;
+                CountDownLatch connected = new CountDownLatch(1);
 
-                // start a new thread to feed data in
-                new Thread(() -> {
+                Thread dataThread = new Thread(() -> {
                     try (PipedOutputStream pout = new PipedOutputStream(pin);
                             ZipOutputStream zout = new ZipOutputStream(pout)) {
+                        connected.countDown(); // pipe is now connected, unblock caller
                         zout.setMethod(ZipOutputStream.STORED); // No compression.
                         pathsToZip.stream().forEach(LambdaUtils.uncheckConsumer(f -> {
                             status.setExternalFile(f.getLeft());
@@ -280,13 +283,25 @@ public class DownloadController {
                             zout.closeEntry();
                         }));
                     } catch (Exception e1) {
+                        connected.countDown(); // unblock caller even on failure
                         LOG.debug("Error with output to zip", e1);
                     }
-                }, "DownloadControllerDatafeed").start();
+                }, "DownloadControllerDatafeed");
 
-                // wait for src data thread to connect
-                while (pin.source == null) {
-                    // sit and wait and ponder life
+                try {
+                    dataThread.start();
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to start download data thread", e);
+                }
+
+                try {
+                    if (!connected.await(30, TimeUnit.SECONDS)) {
+                        dataThread.interrupt();
+                        throw new RuntimeException("Timed out waiting for download data thread to connect");
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted waiting for download data thread", e);
                 }
             };
 

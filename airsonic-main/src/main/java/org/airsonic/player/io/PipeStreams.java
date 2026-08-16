@@ -106,7 +106,7 @@ public class PipeStreams {
         @Override
         public void close() throws IOException {
             if (source == null) {
-                throw new IOException("Unconnected pipe");
+                return;
             }
 
             synchronized (buffer) {
