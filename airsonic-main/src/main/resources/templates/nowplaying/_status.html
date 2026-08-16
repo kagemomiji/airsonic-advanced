@@ -11,7 +11,7 @@
 
                 <img th:if="${np.avatarScheme == 'CUSTOM' and np.hasCustomAvatar}"
                          alt="Avatar"
-                         th:src="@{/avatar.view(username=${np.username})}"
+                         th:src="@{/avatar.view(username=${np.avatarUsername})}"
                          style="padding-right:5pt;width:30px;height:30px"/>
 
                 <b th:text="${np.username}"></b>

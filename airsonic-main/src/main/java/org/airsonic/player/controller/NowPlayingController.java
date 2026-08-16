@@ -122,7 +122,10 @@ public class NowPlayingController {
         boolean hasCustomAvatar = userSettings.getAvatarScheme() == AvatarScheme.CUSTOM
                 && personalSettingsService.getCustomAvatar(username) != null;
 
-        // generate display name
+        // avatarUsername stays as the real Airsonic username for avatar URL lookups
+        String avatarUsername = username;
+
+        // generate display name (may include player name for external players)
         if (StringUtils.isNotBlank(player.getName())) {
             username += "@" + player.getName();
         }
@@ -136,6 +139,7 @@ public class NowPlayingController {
             player.getId(),
             mediaFile.getId(),
             username,
+            avatarUsername,
             artist,
             title,
             minutesAgo,

@@ -109,11 +109,48 @@ public class NowPlayingControllerTest {
         assertEquals(5L, view.getMinutesAgo());
         assertEquals(AvatarScheme.NONE.name(), view.getAvatarScheme());
         assertEquals(TEST_USER + "@" + player.getName(), view.getUsername());
+        // avatarUsername must remain the original username, not the display name with "@player"
+        assertEquals(TEST_USER, view.getAvatarUsername());
         // Since mediaFile is not a video, lyrics should be shown.
         assertTrue(view.isShowLyrics());
         // Since AvatarScheme.NONE is set in userSettings, no custom avatar should be present.
         assertFalse(view.hasCustomAvatar());
 
+    }
+
+    @Test
+    @WithMockUser(username = TEST_USER, password = TEST_PASSWORD)
+    public void testAvatarUrlUsesOriginalUsername() throws Exception {
+        UUID id = UUID.randomUUID();
+        Player player = new Player();
+        player.setId(20);
+        player.setName("ExternalPlayer");
+        player.setUsername(TEST_USER);
+
+        when(playStatus.getTransferId()).thenReturn(id);
+        when(playStatus.getPlayer()).thenReturn(player);
+        when(playStatus.getMediaFile()).thenReturn(mediaFile);
+        when(playStatus.getMinutesAgo()).thenReturn(2L);
+        when(mediaFile.getId()).thenReturn(30);
+        when(mediaFile.isVideo()).thenReturn(false);
+        when(mediaFile.getArtist()).thenReturn("Artist");
+        when(mediaFile.getTitle()).thenReturn("Title");
+        when(userSettings.getAvatarScheme()).thenReturn(AvatarScheme.NONE);
+        when(personalSettingsService.getUserSettings(TEST_USER)).thenReturn(userSettings);
+        when(statusService.getActivePlayStatuses()).thenReturn(List.of(playStatus));
+        when(statusService.getInactivePlayStatuses()).thenReturn(List.of());
+
+        NowPlayingView view = (NowPlayingView) mvc.perform(get("/nowPlaying/status").param("id", id.toString()))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getModelAndView()
+                .getModel()
+                .get("np");
+
+        // display name gets player suffix appended
+        assertEquals(TEST_USER + "@ExternalPlayer", view.getUsername());
+        // avatar URL lookup must use the unmodified username, not the display name
+        assertEquals(TEST_USER, view.getAvatarUsername());
     }
 
     @Test

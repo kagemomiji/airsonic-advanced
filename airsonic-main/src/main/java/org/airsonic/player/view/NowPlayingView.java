@@ -33,6 +33,7 @@ public class NowPlayingView {
     private final Integer mediaFileId;
 
     private final String username;
+    private final String avatarUsername;
     private final String artist;
     private final String title;
     private final long minutesAgo;
@@ -43,13 +44,14 @@ public class NowPlayingView {
     private final boolean hasCustomAvatar;
 
     public NowPlayingView(UUID transferId, Integer playerId, Integer mediaFileId,
-            String username, String artist, String title, long minutesAgo,
+            String username, String avatarUsername, String artist, String title, long minutesAgo,
             boolean showLyrics, String avatarScheme, Integer systemAvatarId,
             boolean hasCustomAvatar) {
         this.transferId = transferId;
         this.playerId = playerId;
         this.mediaFileId = mediaFileId;
         this.username = username;
+        this.avatarUsername = avatarUsername;
         this.artist = artist;
         this.title = title;
         this.minutesAgo = minutesAgo;
@@ -73,6 +75,10 @@ public class NowPlayingView {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getAvatarUsername() {
+        return avatarUsername;
     }
 
     public String getArtist() {
