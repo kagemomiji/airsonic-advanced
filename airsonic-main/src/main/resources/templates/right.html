@@ -59,10 +59,27 @@
                     // no need to populate initial because the updates will occur frequently enough and are self-sufficient
                     '/topic/scanStatus': scanningStatus,
                     '/topic/nowPlaying/current/add': function (msg) {
-                        enqueueAdd(JSON.parse(msg.body), 'nowPlaying');
+                        const status = JSON.parse(msg.body);
+                        // Debounce: wait 2 seconds before adding to the now-playing table.
+                        // Probes from external players (e.g. DSub) open and close the stream
+                        // within milliseconds; debouncing prevents a "Now Playing" flash that
+                        // is immediately replaced by "Recently Played".
+                        if (nowPlayingPendingAdds[status.transferId]) {
+                            clearTimeout(nowPlayingPendingAdds[status.transferId]);
+                        }
+                        nowPlayingPendingAdds[status.transferId] = setTimeout(function() {
+                            delete nowPlayingPendingAdds[status.transferId];
+                            enqueueAdd(status, 'nowPlaying');
+                        }, 2000);
                     },
                     '/topic/nowPlaying/current/remove': function (msg) {
-                        enqueueRemove(JSON.parse(msg.body), 'nowPlaying');
+                        const status = JSON.parse(msg.body);
+                        // Cancel any pending debounced add for this transfer
+                        if (nowPlayingPendingAdds[status.transferId]) {
+                            clearTimeout(nowPlayingPendingAdds[status.transferId]);
+                            delete nowPlayingPendingAdds[status.transferId];
+                        }
+                        enqueueRemove(status, 'nowPlaying');
                     },
                     '/topic/nowPlaying/recent/add': function (msg) {
                         enqueueAdd(JSON.parse(msg.body), 'recentlyPlayed');
@@ -95,6 +112,7 @@
         }
 
         const queue = new TaskQueue();
+        const nowPlayingPendingAdds = {};
 
         function enqueueAdd(status, table) {
           return queue.enqueue(() => addStatus(status, table));
