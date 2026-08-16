@@ -149,7 +149,24 @@ public class PodcastManagementService {
     public PodcastChannel createChannel(String url) {
         PodcastChannel channel = podcastPersistenceService.createChannel(url);
         if (channel != null) {
-            refreshChannels(Arrays.asList(channel), true);
+            final int channelId = channel.getId();
+            podcastRefresher.refresh(channelId, true).whenComplete((result, x) -> {
+                if (x != null || Boolean.FALSE.equals(result)) {
+                    // Initial refresh failed: feed URL is invalid or unreachable.
+                    // Auto-delete so the user does not end up with a broken null-title channel.
+                    LOG.warn("Removing podcast channel {} because initial refresh failed", channelId);
+                    deleteChannel(channelId);
+                    return;
+                }
+                List<CompletableFuture<Void>> episodeFutures = podcastPersistenceService.getEpisodes(channelId)
+                    .stream()
+                    .filter(episode -> episode.getStatus() == PodcastStatus.NEW && episode.getUrl() != null)
+                    .map(ep -> podcastDownloadClient.downloadEpisode(ep.getId()))
+                    .collect(Collectors.toList());
+                CompletableFuture.allOf(episodeFutures.toArray(new CompletableFuture[0])).join();
+                podcastPersistenceService.setChannelCompleted(channel);
+                asyncWebSocketClient.send("/topic/podcasts/updated", channelId);
+            });
         }
         return channel;
     }
@@ -178,14 +195,20 @@ public class PodcastManagementService {
                     if (x != null) {
                         LOG.error("Failed to refresh channel {}", channel.getId(), x);
                         podcastPersistenceService.setChannelError(channel, x.getMessage());
+                        asyncWebSocketClient.send("/topic/podcasts/updated", channel.getId());
                         return;
-                    } else if (result && downloadEpisodes) {
+                    }
+                    if (!Boolean.TRUE.equals(result)) {
+                        // refresh() already called setChannelError; do not overwrite with COMPLETED
+                        return;
+                    }
+                    if (downloadEpisodes) {
                         List<CompletableFuture<Void>> episodeFutures = podcastPersistenceService.getEpisodes(channel.getId())
                             .stream()
                             .filter(episode -> episode.getStatus() == PodcastStatus.NEW && episode.getUrl() != null)
                             .map(ep -> podcastDownloadClient.downloadEpisode(ep.getId()))
                             .collect(Collectors.toList());
-                        CompletableFuture.allOf(episodeFutures.toArray(new CompletableFuture[episodeFutures.size()])).join();
+                        CompletableFuture.allOf(episodeFutures.toArray(new CompletableFuture[0])).join();
                     }
                     podcastPersistenceService.setChannelCompleted(channel);
                     asyncWebSocketClient.send("/topic/podcasts/updated", channel.getId());
