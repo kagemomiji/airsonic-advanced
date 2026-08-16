@@ -40,6 +40,7 @@ public class GeneralSettingsCommand {
     private String index;
     private String ignoredArticles;
     private String genreSeparators;
+    private String artistSeparators;
     private String shortcuts;
     private boolean sortAlbumsByYear;
     private boolean gettingStartedEnabled;
@@ -131,6 +132,14 @@ public class GeneralSettingsCommand {
 
     public void setGenreSeparators(String genreSeparators) {
         this.genreSeparators = genreSeparators;
+    }
+
+    public String getArtistSeparators() {
+        return artistSeparators;
+    }
+
+    public void setArtistSeparators(String artistSeparators) {
+        this.artistSeparators = artistSeparators;
     }
 
     public String getShortcuts() {

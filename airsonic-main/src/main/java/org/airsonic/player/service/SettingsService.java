@@ -64,6 +64,7 @@ public class SettingsService {
     private static final String KEY_INDEX_STRING = "IndexString";
     private static final String KEY_IGNORED_ARTICLES = "IgnoredArticles";
     private static final String KEY_GENRE_SEPARATORS = "GenreSeparators";
+    private static final String KEY_ARTIST_SEPARATORS = "ArtistSeparators";
     private static final String KEY_UPLOADS_FOLDER = "UploadsFolder";
     private static final String KEY_SHORTCUTS = "Shortcuts";
     private static final String KEY_PLAYLIST_FOLDER = "PlaylistFolder";
@@ -166,6 +167,7 @@ public class SettingsService {
     private static final String DEFAULT_IGNORED_ARTICLES = "The El La Los Las Le Les";
     private static final String DEFAULT_UPLOADS_FOLDER = "%{['USER_MUSIC_FOLDERS'][0]}/Incoming";
     private static final String DEFAULT_GENRE_SEPARATORS = ";";
+    private static final String DEFAULT_ARTIST_SEPARATORS = "";
     private static final String DEFAULT_SHORTCUTS = "New Incoming Podcast";
     private static final String DEFAULT_MUSIC_FILE_TYPES = "mp3 ogg oga aac m4a m4b flac wav wma aif aiff ape mpc shn mka opus alm 669 mdl far xm mod fnk imf it liq wow mtm ptm rtm stm s3m ult dmf dbm med okt emod sfx m15 mtn amf gdm stx gmc psm j2b umx amd rad hsc flx gtk mgt mtp wv";
     private static final String DEFAULT_VIDEO_FILE_TYPES = "flv avi mpg mpeg mp4 m4v mkv mov wmv ogv divx m2ts webm";
@@ -599,6 +601,14 @@ public class SettingsService {
 
     public void setGenreSeparators(String genreSeparators) {
         setProperty(KEY_GENRE_SEPARATORS, genreSeparators);
+    }
+
+    public String getArtistSeparators() {
+        return getProperty(KEY_ARTIST_SEPARATORS, DEFAULT_ARTIST_SEPARATORS);
+    }
+
+    public void setArtistSeparators(String artistSeparators) {
+        setProperty(KEY_ARTIST_SEPARATORS, artistSeparators);
     }
 
     public String getShortcuts() {

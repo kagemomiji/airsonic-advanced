@@ -20,6 +20,7 @@
  */
 package org.airsonic.player.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.airsonic.player.config.AirsonicScanConfig;
 import org.airsonic.player.domain.*;
 import org.airsonic.player.domain.CoverArt.EntityType;
@@ -516,9 +517,30 @@ public class MediaScannerService {
             return;
         }
 
+        // When an artist separator is configured, split multi-artist tags and index each artist separately.
+        String separators = settingsService.getArtistSeparators();
+        if (StringUtils.isNotEmpty(separators)) {
+            String[] splitArtists = StringUtils.split(file.getAlbumArtist(), separators);
+            if (splitArtists.length > 1) {
+                for (String splitArtist : splitArtists) {
+                    String trimmed = StringUtils.trim(splitArtist);
+                    if (StringUtils.isNotBlank(trimmed)) {
+                        updateSingleArtist(trimmed, grandParent, file, musicFolder, lastScanned, albumCount, artists);
+                    }
+                }
+                return;
+            }
+        }
+
+        updateSingleArtist(file.getAlbumArtist(), grandParent, file, musicFolder, lastScanned, albumCount, artists);
+    }
+
+    private void updateSingleArtist(String artistName, MediaFile grandParent, MediaFile file, MusicFolder musicFolder,
+            Instant lastScanned, Map<String, AtomicInteger> albumCount, Map<String, Artist> artists) {
+
         final AtomicBoolean firstEncounter = new AtomicBoolean(false);
 
-        Artist artist = artists.compute(file.getAlbumArtist(), (k, v) -> {
+        Artist artist = artists.compute(artistName, (k, v) -> {
             Artist a = v;
 
             if (a == null) {

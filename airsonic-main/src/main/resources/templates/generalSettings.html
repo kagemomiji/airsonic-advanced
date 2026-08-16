@@ -73,6 +73,14 @@
         </tr>
 
         <tr>
+            <td th:text="#{generalsettings.artistseparators}"></td>
+            <td>
+                <input th:field="*{artistSeparators}" size="70"/>
+                <th:block th:replace="~{helpToolTip((topic=artistseparators))}" />
+            </td>
+        </tr>
+
+        <tr>
             <td th:text="#{generalsettings.shortcuts}"></td>
             <td>
                 <input th:field="*{shortcuts}" size="70"/>

@@ -63,6 +63,7 @@ public class GeneralSettingsController {
         command.setCoverArtQuality(settingsService.getCoverArtQuality());
         command.setIgnoredArticles(settingsService.getIgnoredArticles());
         command.setGenreSeparators(settingsService.getGenreSeparators());
+        command.setArtistSeparators(settingsService.getArtistSeparators());
         command.setShortcuts(settingsService.getShortcuts());
         command.setIndex(settingsService.getIndexString());
         command.setPlaylistFolder(settingsService.getPlaylistFolder());
@@ -121,6 +122,7 @@ public class GeneralSettingsController {
         settingsService.setIndexString(command.getIndex());
         settingsService.setIgnoredArticles(command.getIgnoredArticles());
         settingsService.setGenreSeparators(command.getGenreSeparators());
+        settingsService.setArtistSeparators(command.getArtistSeparators());
         settingsService.setShortcuts(command.getShortcuts());
         settingsService.setPlaylistFolder(command.getPlaylistFolder());
         playlistFileService.addPlaylistFolderWatcher();
