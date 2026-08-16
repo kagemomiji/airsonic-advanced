@@ -33,6 +33,8 @@ import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.FileTime;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,6 +57,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Provides services for transcoding media. Transcoding is the process of
@@ -75,6 +81,45 @@ public class TranscodingService {
     private TranscodingRepository transcodingRepository;
     @Autowired
     private PersonalSettingsService personalSettingsService;
+    @Autowired
+    private TaskSchedulingService taskService;
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReady() {
+        // Delete leftover airsonic temp files from previous runs (or aborted streams)
+        // at startup, then repeat every hour to catch files from dropped connections.
+        taskService.scheduleFixedDelayTask("transcode-tmpfile-cleanup",
+                this::cleanupStaleTranscodeTmpFiles,
+                Instant.now(),
+                Duration.ofHours(1),
+                true);
+    }
+
+    private void cleanupStaleTranscodeTmpFiles() {
+        Path tempDir = Path.of(System.getProperty("java.io.tmpdir"));
+        Instant cutoff = Instant.now().minus(Duration.ofHours(1));
+        try (Stream<Path> files = Files.list(tempDir)) {
+            files.filter(p -> p.getFileName().toString().startsWith("airsonic"))
+                 .filter(p -> {
+                     try {
+                         FileTime mtime = Files.getLastModifiedTime(p);
+                         return mtime.toInstant().isBefore(cutoff);
+                     } catch (IOException e) {
+                         return false;
+                     }
+                 })
+                 .forEach(p -> {
+                     try {
+                         Files.deleteIfExists(p);
+                         LOG.info("Deleted stale transcode temp file: {}", p);
+                     } catch (IOException e) {
+                         LOG.warn("Failed to delete stale transcode temp file: {}", p);
+                     }
+                 });
+        } catch (IOException e) {
+            LOG.warn("Failed to scan temp directory for stale transcode files", e);
+        }
+    }
 
     /**
      * Returns all transcodings.
