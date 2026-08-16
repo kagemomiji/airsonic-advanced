@@ -93,4 +93,17 @@
         </update>
         <rollback changeSetId="schema50_003" changeSetAuthor="muff1nman" changeSetPath="classpath:liquibase/legacy/schema50.xml" />
     </changeSet>
+    <changeSet id="addsplittingtranscoder_001_mariadb" author="slmingol" dbms="mariadb">
+        <!-- MariaDB LIKE is case-insensitive by default so the !mysql changeset's precondition
+             matches the existing lowercase %s and skips the update. Use LIKE BINARY here to
+             distinguish %S (split placeholder) from %s (source file) correctly. -->
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">select count(*) from transcoding where name='mp3 audio' and step1 like binary '% %%S %'</sqlCheck>
+        </preConditions>
+        <update tableName="transcoding">
+            <column name="step1" value="ffmpeg %S -i %s -map 0:0 -b:a %bk -v 0 -f mp3 -" />
+            <where>name='mp3 audio'</where>
+        </update>
+        <rollback changeSetId="schema50_003" changeSetAuthor="muff1nman" changeSetPath="classpath:liquibase/legacy/schema50.xml" />
+    </changeSet>
 </databaseChangeLog>
