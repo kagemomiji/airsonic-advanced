@@ -8,6 +8,11 @@ import org.airsonic.player.parser.lyrics.LrcParser;
 import org.airsonic.player.parser.lyrics.LyricsLine;
 import org.airsonic.player.repository.LyricsRepository;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -72,21 +77,38 @@ public class LyricsService {
                 targetLrcPath = lrcPath;
             } else if (Files.exists(lrcPathUpper)) {
                 targetLrcPath = lrcPathUpper;
-            } else {
-                LOG.debug("LRC file does not exist for media: {}", mediaFile.getId());
-                return null;
             }
-            LrcFile lrcFile = lrcParser.parse(targetLrcPath);
-            if (lrcFile == null || lrcFile.getLyricsLines().isEmpty()) {
+
+            if (targetLrcPath != null) {
+                LrcFile lrcFile = lrcParser.parse(targetLrcPath);
+                if (lrcFile != null && !lrcFile.getLyricsLines().isEmpty()) {
+                    StringBuilder lyricsText = new StringBuilder();
+                    for (LyricsLine line : lrcFile.getLyricsLines()) {
+                        lyricsText.append(line.getText()).append("\n");
+                    }
+                    Lyrics newLyrics = new Lyrics(lyricsText.toString(), mediaFile.getId(), "file");
+                    return lyricsRepository.save(newLyrics);
+                }
                 LOG.debug("No lyrics found in LRC file: {}", targetLrcPath);
-                return null;
             }
-            StringBuilder lyricsText = new StringBuilder();
-            for (LyricsLine line : lrcFile.getLyricsLines()) {
-                lyricsText.append(line.getText()).append("\n");
+
+            // Fall back to embedded id3 USLT tag via jaudiotagger
+            try {
+                AudioFile audioFile = AudioFileIO.read(filePath.toFile());
+                Tag tag = audioFile.getTag();
+                if (tag != null) {
+                    String embedded = StringUtils.trimToNull(tag.getFirst(FieldKey.LYRICS));
+                    if (embedded != null) {
+                        Lyrics newLyrics = new Lyrics(embedded, mediaFile.getId(), "tag");
+                        return lyricsRepository.save(newLyrics);
+                    }
+                }
+            } catch (Exception e) {
+                LOG.warn("Failed to read embedded lyrics tag from {}: {}", filePath, e.getMessage());
             }
-            Lyrics newLyrics = new Lyrics(lyricsText.toString(), mediaFile.getId(), "file");
-            return lyricsRepository.save(newLyrics);
+
+            LOG.debug("No lyrics found for media: {}", mediaFile.getId());
+            return null;
         });
 
     }

@@ -4,6 +4,10 @@ import org.airsonic.player.domain.Lyrics;
 import org.airsonic.player.domain.MediaFile;
 import org.airsonic.player.repository.LyricsRepository;
 import org.airsonic.player.util.MusicFolderTestData;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,8 +15,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -114,6 +120,60 @@ class LyricsServiceTest {
         assertNotNull(result.getCreated());
         assertNotNull(result.getUpdated());
 
+    }
+
+    @Test
+    void getLyricsFromMediaFile_shouldReadEmbeddedUsltTagWhenNoLrcFile() {
+        Path path = Path.of("nonexistent.mp3");
+        when(mediaFile.isDirectory()).thenReturn(false);
+        when(mediaFile.isIndexedTrack()).thenReturn(false);
+        when(mediaFile.getId()).thenReturn(5);
+        when(mediaFile.getFullPath()).thenReturn(path);
+        when(lyricsRepository.findByMediaFileId(eq(5))).thenReturn(Optional.empty());
+        when(lyricsRepository.save(any(Lyrics.class))).thenAnswer(i -> i.getArgument(0));
+
+        AudioFile mockAudioFile = mock(AudioFile.class);
+        Tag mockTag = mock(Tag.class);
+        when(mockAudioFile.getTag()).thenReturn(mockTag);
+        when(mockTag.getFirst(FieldKey.LYRICS)).thenReturn("Embedded lyrics text");
+
+        try (MockedStatic<AudioFileIO> mocked = mockStatic(AudioFileIO.class)) {
+            mocked.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mockAudioFile);
+
+            Lyrics result = lyricsService.getLyricsFromMediaFile(mediaFile);
+
+            assertNotNull(result);
+            assertEquals("Embedded lyrics text", result.getLyrics());
+            assertEquals(5, result.getMediaFileId());
+            assertEquals("tag", result.getSource());
+            ArgumentCaptor<Lyrics> captor = ArgumentCaptor.forClass(Lyrics.class);
+            verify(lyricsRepository).save(captor.capture());
+            assertEquals("tag", captor.getValue().getSource());
+        }
+    }
+
+    @Test
+    void getLyricsFromMediaFile_shouldReturnNullWhenTagHasNoLyrics() {
+        Path path = Path.of("nonexistent.mp3");
+        when(mediaFile.isDirectory()).thenReturn(false);
+        when(mediaFile.isIndexedTrack()).thenReturn(false);
+        when(mediaFile.getId()).thenReturn(6);
+        when(mediaFile.getFullPath()).thenReturn(path);
+        when(lyricsRepository.findByMediaFileId(eq(6))).thenReturn(Optional.empty());
+
+        AudioFile mockAudioFile = mock(AudioFile.class);
+        Tag mockTag = mock(Tag.class);
+        when(mockAudioFile.getTag()).thenReturn(mockTag);
+        when(mockTag.getFirst(FieldKey.LYRICS)).thenReturn("  "); // blank
+
+        try (MockedStatic<AudioFileIO> mocked = mockStatic(AudioFileIO.class)) {
+            mocked.when(() -> AudioFileIO.read(any(File.class))).thenReturn(mockAudioFile);
+
+            Lyrics result = lyricsService.getLyricsFromMediaFile(mediaFile);
+
+            assertNull(result);
+            verify(lyricsRepository, never()).save(any());
+        }
     }
 
     @Test
