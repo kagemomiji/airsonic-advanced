@@ -30,12 +30,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -55,6 +57,8 @@ public class MediaFileServiceTest {
     private MediaFileCache mediaFileCache;
     @Mock
     private MediaFolderService mediaFolderService;
+    @Mock
+    private SettingsService settingsService;
 
     @InjectMocks
     private MediaFileService mediaFileService;
@@ -97,5 +101,31 @@ public class MediaFileServiceTest {
         verify(mediaFileRepository).findByFolderAndPath(any(), eq("valid/airsonic-test.wav"));
         verify(mediaFileRepository).save(base);
         verify(coverArtService).persistIfNeeded(eq(base));
+    }
+
+    @Test
+    public void testGetSongsForAlbumFiltersIndexedSourceFile() {
+        // source file: hasIndex=true, isIndexedTrack=false
+        MediaFile sourceFile = new MediaFile();
+        sourceFile.setIndexPath("album/disc.cue");
+        sourceFile.setPath("album/disc.flac");
+        sourceFile.setMediaType(MediaType.MUSIC);
+
+        // virtual track: hasIndex=false, isIndexedTrack=true
+        MediaFile virtualTrack = new MediaFile();
+        virtualTrack.setPath("album/disc.flac");
+        virtualTrack.setStartPosition(0.0);
+        virtualTrack.setMediaType(MediaType.MUSIC);
+
+        when(mediaFileRepository.findByAlbumArtistAndAlbumNameAndMediaTypeInAndPresentTrue(
+                eq("Artist"), eq("Album"), any(), any(Sort.class)))
+                .thenReturn(List.of(sourceFile, virtualTrack));
+        // HideVirtualTracks=false: source file hidden, virtual tracks shown
+        when(settingsService.getHideVirtualTracks()).thenReturn(false);
+
+        List<MediaFile> result = mediaFileService.getSongsForAlbum("Artist", "Album");
+
+        assertEquals(1, result.size());
+        assertTrue(result.get(0).isIndexedTrack(), "Only virtual tracks should be returned");
     }
 }

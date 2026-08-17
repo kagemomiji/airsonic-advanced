@@ -412,7 +412,10 @@ public class MediaFileService {
      * @return All songs in the album.
      */
     public List<MediaFile> getSongsForAlbum(String artist, String album) {
-        return mediaFileRepository.findByAlbumArtistAndAlbumNameAndMediaTypeInAndPresentTrue(artist, album, MediaType.audioTypes(), Sort.by("discNumber", "trackNumber"));
+        return mediaFileRepository.findByAlbumArtistAndAlbumNameAndMediaTypeInAndPresentTrue(artist, album, MediaType.audioTypes(), Sort.by("discNumber", "trackNumber"))
+                .stream()
+                .filter(this::showMediaFile)
+                .collect(Collectors.toList());
     }
 
     /**
