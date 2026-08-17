@@ -7,14 +7,19 @@ import org.airsonic.player.domain.entity.StarredAlbum;
 import org.airsonic.player.repository.AlbumRepository;
 import org.airsonic.player.repository.OffsetBasedPageRequest;
 import org.airsonic.player.repository.StarredAlbumRepository;
+import org.airsonic.player.service.SettingsService;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import jakarta.persistence.criteria.Predicate;
+
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +30,12 @@ public class AlbumService {
 
     private final AlbumRepository albumRepository;
     private final StarredAlbumRepository starredAlbumRepository;
+    private final SettingsService settingsService;
 
-    public AlbumService(AlbumRepository albumRepository, StarredAlbumRepository starredAlbumRepository) {
+    public AlbumService(AlbumRepository albumRepository, StarredAlbumRepository starredAlbumRepository, SettingsService settingsService) {
         this.albumRepository = albumRepository;
         this.starredAlbumRepository = starredAlbumRepository;
+        this.settingsService = settingsService;
     }
 
     /**
@@ -213,9 +220,27 @@ public class AlbumService {
             return Collections.emptyList();
         }
         OffsetBasedPageRequest pageRequest = new OffsetBasedPageRequest(offset, count, Sort.by(Order.asc("id")));
+        String separators = settingsService.getGenreSeparators();
+        Specification<Album> spec = this.<Album>buildGenreSpec(genre, separators)
+            .and((root, q, cb) -> root.get("folder").in(musicFolders))
+            .and((root, q, cb) -> cb.isTrue(root.get("present")));
+        return albumRepository.findAll(spec, pageRequest).getContent();
+    }
 
-        return albumRepository.findByGenreAndFolderInAndPresentTrue(genre, musicFolders,
-                pageRequest);
+    private <T> Specification<T> buildGenreSpec(String genre, String separators) {
+        return (root, q, cb) -> {
+            List<Predicate> preds = new ArrayList<>();
+            preds.add(cb.equal(root.get("genre"), genre));
+            for (char sep : separators.toCharArray()) {
+                String s = String.valueOf(sep);
+                preds.add(cb.like(root.get("genre"), genre + s + "%"));
+                preds.add(cb.like(root.get("genre"), "%" + s + genre + s + "%"));
+                preds.add(cb.like(root.get("genre"), "%" + s + genre));
+                preds.add(cb.like(root.get("genre"), "%" + s + " " + genre + s + "%"));
+                preds.add(cb.like(root.get("genre"), "%" + s + " " + genre));
+            }
+            return cb.or(preds.toArray(new Predicate[0]));
+        };
     }
 
     /**

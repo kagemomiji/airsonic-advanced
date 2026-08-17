@@ -4,6 +4,7 @@ import org.airsonic.player.domain.Album;
 import org.airsonic.player.domain.MusicFolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
-public interface AlbumRepository extends JpaRepository<Album, Integer> {
+public interface AlbumRepository extends JpaRepository<Album, Integer>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Album> {
 
     public Optional<Album> findByArtistAndName(String artist, String name);
 

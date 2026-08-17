@@ -61,6 +61,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +69,7 @@ import org.springframework.util.CollectionUtils;
 
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
+import jakarta.persistence.criteria.Predicate;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -428,7 +430,28 @@ public class MediaFileService {
         if (CollectionUtils.isEmpty(musicFolders)) {
             return Collections.emptyList();
         }
-        return mediaFileRepository.findByFolderInAndMediaTypeInAndGenreAndPresentTrue(musicFolders, MediaType.audioTypes(), genre, new OffsetBasedPageRequest(offset, count, Sort.by("id")));
+        String separators = settingsService.getGenreSeparators();
+        Specification<MediaFile> spec = this.<MediaFile>buildGenreSpec(genre, separators)
+            .and((root, q, cb) -> root.get("folder").in(musicFolders))
+            .and((root, q, cb) -> root.get("mediaType").in(MediaType.audioTypes()))
+            .and((root, q, cb) -> cb.isTrue(root.get("present")));
+        return mediaFileRepository.findAll(spec, new OffsetBasedPageRequest(offset, count, Sort.by("id"))).getContent();
+    }
+
+    private <T> Specification<T> buildGenreSpec(String genre, String separators) {
+        return (root, q, cb) -> {
+            List<Predicate> preds = new ArrayList<>();
+            preds.add(cb.equal(root.get("genre"), genre));
+            for (char sep : separators.toCharArray()) {
+                String s = String.valueOf(sep);
+                preds.add(cb.like(root.get("genre"), genre + s + "%"));
+                preds.add(cb.like(root.get("genre"), "%" + s + genre + s + "%"));
+                preds.add(cb.like(root.get("genre"), "%" + s + genre));
+                preds.add(cb.like(root.get("genre"), "%" + s + " " + genre + s + "%"));
+                preds.add(cb.like(root.get("genre"), "%" + s + " " + genre));
+            }
+            return cb.or(preds.toArray(new Predicate[0]));
+        };
     }
 
     /**

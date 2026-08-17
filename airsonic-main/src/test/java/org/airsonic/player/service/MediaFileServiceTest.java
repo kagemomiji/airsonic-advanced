@@ -30,12 +30,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -55,6 +59,8 @@ public class MediaFileServiceTest {
     private MediaFileCache mediaFileCache;
     @Mock
     private MediaFolderService mediaFolderService;
+    @Mock
+    private SettingsService settingsService;
 
     @InjectMocks
     private MediaFileService mediaFileService;
@@ -97,5 +103,32 @@ public class MediaFileServiceTest {
         verify(mediaFileRepository).findByFolderAndPath(any(), eq("valid/airsonic-test.wav"));
         verify(mediaFileRepository).save(base);
         verify(coverArtService).persistIfNeeded(eq(base));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetSongsByGenreUsesFindAllWithSpecification() {
+        MediaFile song = new MediaFile();
+        song.setPath("songs/track.mp3");
+        song.setMediaType(MediaType.MUSIC);
+        song.setGenre("Dance; Edm; House");
+        song.setFolder(mockedFolder);
+
+        when(settingsService.getGenreSeparators()).thenReturn(";");
+        when(mediaFileRepository.findAll(any(Specification.class), any(Pageable.class)))
+                .thenReturn(List.of(song));
+
+        List<MediaFile> result = mediaFileService.getSongsByGenre(0, 10, "Dance", List.of(mockedFolder));
+
+        assertEquals(1, result.size());
+        assertEquals("Dance; Edm; House", result.get(0).getGenre());
+        verify(mediaFileRepository).findAll(any(Specification.class), any(Pageable.class));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetSongsByGenreEmptyFoldersReturnsEmpty() {
+        List<MediaFile> result = mediaFileService.getSongsByGenre(0, 10, "Dance", Collections.emptyList());
+        assertTrue(result.isEmpty());
     }
 }
