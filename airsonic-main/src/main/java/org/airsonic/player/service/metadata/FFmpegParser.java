@@ -132,7 +132,13 @@ public class FFmpegParser extends MetaDataParser {
             // Find the first (if any) stream that has dimensions and use those.
             // 'width' and 'height' are display dimensions; compare to 'coded_width', 'coded_height'.
             for (JsonNode stream : result.at("/streams")) {
-                Track track = new Track(stream.get("index").asInt(), stream.get("codec_type").asText(), stream.at("/tags/language").asText(), stream.get("codec_name").asText());
+                JsonNode indexNode = stream.get("index");
+                JsonNode codecTypeNode = stream.get("codec_type");
+                JsonNode codecNameNode = stream.get("codec_name");
+                if (indexNode == null || codecTypeNode == null || codecNameNode == null) {
+                    continue;
+                }
+                Track track = new Track(indexNode.asInt(), codecTypeNode.asText(), stream.at("/tags/language").asText(), codecNameNode.asText());
                 metaData.addTrack(track);
 
                 if (track.isVideo() && stream.has("width") && stream.has("height")) {

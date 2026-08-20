@@ -91,7 +91,7 @@ public class PlayQueueWSController {
     @MessageMapping("/play/mediafile")
     public void playMediaFile(@DestinationVariable("playerId") Integer playerId, PlayQueueRequest req, SimpMessageHeaderAccessor headers) throws Exception {
         Player player = getPlayer(playerId, headers);
-        playQueueService.playMediaFile(player, req.getId(), headers.getSessionId());
+        playQueueService.playMediaFile(player, req.getId(), req.getStartPositionMillis(), headers.getSessionId());
     }
 
     @MessageMapping("/play/radio")
@@ -251,6 +251,7 @@ public class PlayQueueWSController {
         private Integer index;
         private long offset;
         private int count;
+        private long startPositionMillis;
 
         // used for playShuffle()
         private String albumListType;
@@ -320,6 +321,14 @@ public class PlayQueueWSController {
 
         public void setIds(List<Integer> ids) {
             this.ids = ids;
+        }
+
+        public long getStartPositionMillis() {
+            return startPositionMillis;
+        }
+
+        public void setStartPositionMillis(long startPositionMillis) {
+            this.startPositionMillis = startPositionMillis;
         }
     }
 }

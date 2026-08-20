@@ -243,13 +243,14 @@
         }
 
         function onPlay(index) {
-            var data = bookmarksTable.row(index).data().mediaFileEntry;
+            var row = bookmarksTable.row(index).data();
+            var data = row.mediaFileEntry;
             if (data.entryType == 'VIDEO') {
                 var urlBase = "[(@{/videoPlayer})]";
                 var url = urlBase + "?id=" + data.id;
                 top.main.location = url;
             } else {
-                top.playQueue.onPlay(data.id);
+                top.playQueue.onPlay(data.id, row.positionMillis);
             }
         }
         function onAdd(index) {

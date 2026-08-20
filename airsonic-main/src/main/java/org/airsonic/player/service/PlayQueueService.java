@@ -204,6 +204,10 @@ public class PlayQueueService {
     }
 
     public void playMediaFile(Player player, int id, String sessionId) {
+        playMediaFile(player, id, 0L, sessionId);
+    }
+
+    public void playMediaFile(Player player, int id, long startPositionMillis, String sessionId) {
         MediaFile file = mediaFileService.getMediaFile(id);
 
         List<MediaFile> songs;
@@ -224,7 +228,11 @@ public class PlayQueueService {
             songs = mediaFileService.getDescendantsOf(file, true);
         }
 
-        doPlay(player, songs, null, sessionId);
+        final long posMillis = startPositionMillis;
+        Function<PlayQueueInfo, PlayQueueInfo> startFn = posMillis > 0
+                ? pq -> pq.setStartPlayerAt(0).setStartPlayerAtPosition(posMillis)
+                : startAt0;
+        doPlay(player, songs, null, startFn, sessionId);
     }
 
     /**
@@ -377,13 +385,17 @@ public class PlayQueueService {
     }
 
     private void doPlay(Player player, List<MediaFile> files, InternetRadio radio, String sessionId) {
+        doPlay(player, files, radio, startAt0, sessionId);
+    }
+
+    private void doPlay(Player player, List<MediaFile> files, InternetRadio radio, Function<PlayQueueInfo, PlayQueueInfo> startFn, String sessionId) {
         if (player.isWeb()) {
             mediaFileService.removeVideoFiles(files);
         }
         player.getPlayQueue().addFiles(false, files);
         player.getPlayQueue().setRandomSearchCriteria(null);
         player.getPlayQueue().setInternetRadio(radio);
-        broadcastPlayQueue(player, startAt0, sessionId);
+        broadcastPlayQueue(player, startFn, sessionId);
     }
 
     public void add(Player player, List<Integer> ids, Integer index, boolean removeVideoFiles, boolean broadcast) {
