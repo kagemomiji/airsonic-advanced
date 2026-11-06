@@ -35,20 +35,17 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+
 COPY --from=builder /usr/local/bin/run.sh /usr/local/bin/run.sh
 COPY --from=builder /usr/local/bin/entry.sh /usr/local/bin/entry.sh
 
-COPY --from=builder target/cMETA-INF /app/WEB-INF/classes/META-INF
-COPY --from=builder target/lib /app/WEB-INF/lib
-COPY --from=builder target/lib-provided /app/WEB-INF/lib-provided
-COPY --from=builder target/org /app/org
-COPY --from=builder target/sonos /app/sonos
-COPY --from=builder target/icons /app/icons
-COPY --from=builder target/style /app/style
-COPY --from=builder target/cliquibase /app/WEB-INF/classes/liquibase
-COPY --from=builder target/script /app/script
-COPY --from=builder target/META-INF /app/META-INF
-COPY --from=builder target/WEB-INF /app/WEB-INF
+COPY --from=builder /target/cMETA-INF /app/WEB-INF/classes/META-INF
+COPY --from=builder /target/lib /app/WEB-INF/lib
+COPY --from=builder /target/lib-provided /app/WEB-INF/lib-provided
+COPY --from=builder /target/org /app/org
+COPY --from=builder /target/cliquibase /app/WEB-INF/classes/liquibase
+COPY --from=builder /target/META-INF /app/META-INF
+COPY --from=builder /target/WEB-INF /app/WEB-INF
 
 EXPOSE $AIRSONIC_PORT
 
